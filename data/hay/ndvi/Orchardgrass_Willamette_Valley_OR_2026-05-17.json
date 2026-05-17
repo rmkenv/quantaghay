@@ -1,0 +1,123 @@
+{
+  "hay_type": "Orchardgrass",
+  "region": "Willamette_Valley_OR",
+  "state": "OR",
+  "country": "US",
+  "grade": "Premium",
+  "primary_use": "Equine/Export",
+  "bbox": [
+    -123.5,
+    44.0,
+    -122.0,
+    45.5
+  ],
+  "year": 2026,
+  "source": "simulated",
+  "composites": [
+    {
+      "month": 1,
+      "ndvi": 0.1508,
+      "ndre": 0.1134,
+      "lswi": 0.0372,
+      "velocity": 0.0063,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 2,
+      "ndvi": 0.1571,
+      "ndre": 0.1129,
+      "lswi": 0.0931,
+      "velocity": -0.0254,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 3,
+      "ndvi": 0.1,
+      "ndre": 0.05,
+      "lswi": 0.04,
+      "velocity": 0.0994,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 4,
+      "ndvi": 0.3559,
+      "ndre": 0.1826,
+      "lswi": 0.1817,
+      "velocity": 0.13365,
+      "cutting_status": "growing"
+    },
+    {
+      "month": 5,
+      "ndvi": 0.3673,
+      "ndre": 0.1916,
+      "lswi": 0.1464,
+      "velocity": 0.12815,
+      "cutting_status": "growing"
+    },
+    {
+      "month": 6,
+      "ndvi": 0.6122,
+      "ndre": 0.2998,
+      "lswi": 0.2881,
+      "velocity": 0.14295,
+      "cutting_status": "approaching_ready"
+    },
+    {
+      "month": 7,
+      "ndvi": 0.6532,
+      "ndre": 0.3201,
+      "lswi": 0.3325,
+      "velocity": -0.08455,
+      "cutting_status": "ready_to_cut"
+    },
+    {
+      "month": 8,
+      "ndvi": 0.4431,
+      "ndre": 0.2078,
+      "lswi": 0.1829,
+      "velocity": -0.0672,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 9,
+      "ndvi": 0.5188,
+      "ndre": 0.2625,
+      "lswi": 0.2705,
+      "velocity": -0.17155,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 10,
+      "ndvi": 0.1,
+      "ndre": 0.05,
+      "lswi": 0.04,
+      "velocity": -0.19205,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 11,
+      "ndvi": 0.1347,
+      "ndre": 0.0627,
+      "lswi": 0.0418,
+      "velocity": -0.00075,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 12,
+      "ndvi": 0.0985,
+      "ndre": 0.1066,
+      "lswi": 0.0903,
+      "velocity": -0.0362,
+      "cutting_status": "post_cut"
+    }
+  ],
+  "peak_ndvi": 0.6532,
+  "peak_ndre": 0.3201,
+  "current_ndvi": 0.0985,
+  "current_ndre": 0.1066,
+  "current_velocity": -0.0362,
+  "current_status": "post_cut",
+  "estimated_cuts": 3,
+  "cloud_cover_pct": 0.0,
+  "scene_count": 0
+}

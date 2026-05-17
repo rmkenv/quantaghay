@@ -1,0 +1,123 @@
+{
+  "hay_type": "Alfalfa",
+  "region": "San_Joaquin_Valley_CA",
+  "state": "CA",
+  "country": "US",
+  "grade": "Good/Premium",
+  "primary_use": "Dairy",
+  "bbox": [
+    -121.0,
+    35.5,
+    -119.0,
+    37.5
+  ],
+  "year": 2026,
+  "source": "simulated",
+  "composites": [
+    {
+      "month": 1,
+      "ndvi": 0.1084,
+      "ndre": 0.0738,
+      "lswi": 0.0778,
+      "velocity": 0.0129,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 2,
+      "ndvi": 0.1213,
+      "ndre": 0.0943,
+      "lswi": 0.0795,
+      "velocity": -0.0042,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 3,
+      "ndvi": 0.1,
+      "ndre": 0.05,
+      "lswi": 0.04,
+      "velocity": 0.1255,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 4,
+      "ndvi": 0.3723,
+      "ndre": 0.1635,
+      "lswi": 0.1426,
+      "velocity": 0.2364,
+      "cutting_status": "growing"
+    },
+    {
+      "month": 5,
+      "ndvi": 0.5728,
+      "ndre": 0.2963,
+      "lswi": 0.2444,
+      "velocity": 0.0653,
+      "cutting_status": "growing"
+    },
+    {
+      "month": 6,
+      "ndvi": 0.5029,
+      "ndre": 0.2663,
+      "lswi": 0.2099,
+      "velocity": -0.0236,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 7,
+      "ndvi": 0.5256,
+      "ndre": 0.3005,
+      "lswi": 0.2196,
+      "velocity": 0.11265,
+      "cutting_status": "growing"
+    },
+    {
+      "month": 8,
+      "ndvi": 0.7282,
+      "ndre": 0.4195,
+      "lswi": 0.3441,
+      "velocity": -0.00645,
+      "cutting_status": "ready_to_cut"
+    },
+    {
+      "month": 9,
+      "ndvi": 0.5127,
+      "ndre": 0.2602,
+      "lswi": 0.2037,
+      "velocity": -0.3141,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 10,
+      "ndvi": 0.1,
+      "ndre": 0.05,
+      "lswi": 0.04,
+      "velocity": -0.1957,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 11,
+      "ndvi": 0.1213,
+      "ndre": 0.058,
+      "lswi": 0.0911,
+      "velocity": -0.00335,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 12,
+      "ndvi": 0.0933,
+      "ndre": 0.1025,
+      "lswi": 0.0671,
+      "velocity": -0.028,
+      "cutting_status": "post_cut"
+    }
+  ],
+  "peak_ndvi": 0.7282,
+  "peak_ndre": 0.4195,
+  "current_ndvi": 0.0933,
+  "current_ndre": 0.1025,
+  "current_velocity": -0.028,
+  "current_status": "post_cut",
+  "estimated_cuts": 5,
+  "cloud_cover_pct": 0.0,
+  "scene_count": 0
+}

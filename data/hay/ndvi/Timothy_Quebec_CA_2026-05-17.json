@@ -1,0 +1,123 @@
+{
+  "hay_type": "Timothy",
+  "region": "Quebec_CA",
+  "state": "QC",
+  "country": "CA",
+  "grade": "Good",
+  "primary_use": "Dairy",
+  "bbox": [
+    -74.0,
+    45.0,
+    -71.0,
+    47.0
+  ],
+  "year": 2026,
+  "source": "simulated",
+  "composites": [
+    {
+      "month": 1,
+      "ndvi": 0.1149,
+      "ndre": 0.0503,
+      "lswi": 0.0483,
+      "velocity": 0.0081,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 2,
+      "ndvi": 0.123,
+      "ndre": 0.0737,
+      "lswi": 0.0967,
+      "velocity": -0.00745,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 3,
+      "ndvi": 0.1,
+      "ndre": 0.05,
+      "lswi": 0.04,
+      "velocity": 0.11735,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 4,
+      "ndvi": 0.3577,
+      "ndre": 0.1638,
+      "lswi": 0.1428,
+      "velocity": 0.22845,
+      "cutting_status": "growing"
+    },
+    {
+      "month": 5,
+      "ndvi": 0.5569,
+      "ndre": 0.2923,
+      "lswi": 0.2618,
+      "velocity": 0.0583,
+      "cutting_status": "growing"
+    },
+    {
+      "month": 6,
+      "ndvi": 0.4743,
+      "ndre": 0.239,
+      "lswi": 0.2043,
+      "velocity": -0.0217,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 7,
+      "ndvi": 0.5135,
+      "ndre": 0.2639,
+      "lswi": 0.2274,
+      "velocity": 0.11955,
+      "cutting_status": "growing"
+    },
+    {
+      "month": 8,
+      "ndvi": 0.7134,
+      "ndre": 0.3228,
+      "lswi": 0.3261,
+      "velocity": -0.01915,
+      "cutting_status": "ready_to_cut"
+    },
+    {
+      "month": 9,
+      "ndvi": 0.4752,
+      "ndre": 0.2474,
+      "lswi": 0.2138,
+      "velocity": -0.3067,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 10,
+      "ndvi": 0.1,
+      "ndre": 0.05,
+      "lswi": 0.04,
+      "velocity": -0.1588,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 11,
+      "ndvi": 0.1576,
+      "ndre": 0.1045,
+      "lswi": 0.0398,
+      "velocity": -0.00345,
+      "cutting_status": "post_cut"
+    },
+    {
+      "month": 12,
+      "ndvi": 0.0931,
+      "ndre": 0.0799,
+      "lswi": 0.0877,
+      "velocity": -0.0645,
+      "cutting_status": "post_cut"
+    }
+  ],
+  "peak_ndvi": 0.7134,
+  "peak_ndre": 0.3228,
+  "current_ndvi": 0.0931,
+  "current_ndre": 0.0799,
+  "current_velocity": -0.0645,
+  "current_status": "post_cut",
+  "estimated_cuts": 2,
+  "cloud_cover_pct": 0.0,
+  "scene_count": 0
+}
