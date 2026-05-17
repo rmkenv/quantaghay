@@ -1,0 +1,67 @@
+name: Hay Intelligence Pipeline
+
+on:
+  schedule:
+    - cron: '0 7 * * *'      # nightly 07:00 UTC — NDVI + prices + signals
+    - cron: '0 8 * * 5'      # Friday 08:00 UTC — hay market signals refresh
+    - cron: '30 8 1 * *'     # 1st of month — backtest data refresh
+  workflow_dispatch:
+    inputs:
+      run_signals:
+        description: 'Force run hay signals'
+        type: boolean
+        default: true
+
+jobs:
+  hay-pipeline:
+    name: Hay Intelligence
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install feedparser>=6.0.11
+
+      # Step 1: Planetary Computer → hay NDVI/NDRE for 24 nodes
+      - name: Run hay NDVI pipeline
+        run: python scripts/hay_pipeline.py
+        env:
+          PC_SDK_SUBSCRIPTION_KEY: ${{ secrets.PC_SDK_SUBSCRIPTION_KEY }}
+
+      # Step 2: USDA AMS prices + proxy tickers + hay news
+      - name: Fetch hay prices and news
+        run: python scripts/fetch_hay_prices.py
+
+      # Step 3: Ollama Cloud → hay signals for all 24 nodes
+      - name: Generate hay signals
+        run: python scripts/hay_signals.py
+        env:
+          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
+          OLLAMA_MODEL: gpt-oss:20b
+
+      # Step 4: Commit data/ outputs
+      - name: Commit outputs
+        run: |
+          git config user.name  "quantagri-bot"
+          git config user.email "bot@quantagri.local"
+          git add data/hay/
+          git diff --staged --quiet \
+            && echo "Nothing to commit" \
+            || (git commit -m "chore: hay pipeline $(date -u '+%Y-%m-%d %H:%M UTC')" \
+            && git pull --rebase origin main \
+            && git push origin main)
