@@ -1,0 +1,8 @@
+{
+  "hay_type": "Alfalfa",
+  "region": "Eastern_Colorado",
+  "date": "2026-05-18",
+  "skipped": true,
+  "reason": "Insufficient Sentinel-2 scenes (need 3+, cloud cover < 20%)",
+  "data_quality": "skipped"
+}
