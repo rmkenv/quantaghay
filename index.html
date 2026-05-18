@@ -417,10 +417,11 @@ pre{background:var(--bg0);border:1px solid var(--b0);padding:10px 12px;font-size
     <!-- GEOSPATIAL -->
     <div class="view" id="view-geospatial">
       <div class="sh">Geospatial — North American Hay Production Nodes</div>
-      <p style="font-size:11px;color:var(--t2);margin-bottom:14px;line-height:1.7">
+      <p style="font-size:11px;color:var(--t2);margin-bottom:8px;line-height:1.7">
         24 production nodes across alfalfa, timothy, orchardgrass, mixed grass, and bermudagrass regions.
         NDVI and cutting status updated nightly via <strong style="color:var(--cyan)">Planetary Computer Sentinel-2</strong>.
       </p>
+      <div id="geoSourceLabel" style="font-size:10px;margin-bottom:12px;color:var(--amber)">● Loading...</div>
       <div class="cbox">
         <div class="chdr">
           <span>NDVI by Region · Current Growing Season</span>
@@ -998,17 +999,9 @@ function renderNDVIChart(data) {
 
 // ── Geo view ───────────────────────────────────────────────────────
 function renderGeoView() {
-  // Try to use real snapshot data if loaded, fall back to illustrative data
-  const snap = window._snapshotData;
-  const nodes = snap ? snap.signals.map(s => ({
-    r:         s.region || '—',
-    t:         s.hay_type || '—',
-    ndvi:      s.current_ndvi || 0,
-    ndre:      s.current_ndre || 0,
-    cs:        s.cutting_status || 'stable',
-    use:       s.primary_use || '—',
-    lastVisit: s.current_date || null,
-  })) : [
+  // Always start with static illustrative data so the view is never blank.
+  // If real pipeline data is loaded, overlay it on top.
+  const staticNodes = [
     {r:'Imperial Valley, CA',   t:'Alfalfa',      ndvi:.78,ndre:.42,cs:'ready_to_cut',  use:'Dairy/Export', lastVisit:null},
     {r:'Columbia Basin, WA',    t:'Alfalfa/Tim.',  ndvi:.74,ndre:.39,cs:'approaching_ready',use:'Export',   lastVisit:null},
     {r:'Snake River Plain, ID', t:'Alfalfa',      ndvi:.71,ndre:.38,cs:'approaching_ready',use:'Dairy',    lastVisit:null},
@@ -1023,41 +1016,92 @@ function renderGeoView() {
     {r:'Ontario, CA',           t:'Timothy',      ndvi:.52,ndre:.26,cs:'post_cut',       use:'Dairy',       lastVisit:null},
   ];
 
-  const clrMap = {ready_to_cut:'rgba(212,168,67,.7)',approaching_ready:'rgba(212,168,67,.4)',growing:'rgba(0,255,106,.5)',post_cut:'rgba(61,107,66,.5)',past_peak:'rgba(255,61,61,.5)'};
+  // Overlay real pipeline data where available
+  const snap = window._snapshotData;
+  let nodes = staticNodes;
+  let usingRealData = false;
+
+  if (snap && snap.signals && snap.signals.length > 0) {
+    const realNodes = snap.signals
+      .filter(s => s.current_ndvi != null && s.current_ndvi > 0)
+      .map(s => ({
+        r:         (s.region || '').replace(/_/g, ' '),
+        t:         s.hay_type || '—',
+        ndvi:      s.current_ndvi || 0,
+        ndre:      s.current_ndre || 0,
+        cs:        s.cutting_status || 'stable',
+        use:       s.primary_use || '—',
+        lastVisit: s.current_date || null,
+      }));
+    if (realNodes.length > 0) {
+      nodes = realNodes;
+      usingRealData = true;
+    }
+  }
+
+  const clrMap  = {ready_to_cut:'rgba(212,168,67,.7)',approaching_ready:'rgba(212,168,67,.4)',growing:'rgba(0,255,106,.5)',post_cut:'rgba(61,107,66,.5)',past_peak:'rgba(255,61,61,.5)'};
   const bclrMap = {ready_to_cut:'#d4a843',approaching_ready:'#d4a843',growing:'#00ff6a',post_cut:'#3d6b42',past_peak:'#ff3d3d'};
+  const clrText = cs => ({ready_to_cut:'var(--hay2)',approaching_ready:'var(--amber)',growing:'var(--g0)',post_cut:'var(--t3)',past_peak:'var(--red)'})[cs] || 'var(--t2)';
 
   const ctx = document.getElementById('geoChart').getContext('2d');
   if (geoChart) geoChart.destroy();
   geoChart = new Chart(ctx, {
-    type:'bar',
-    data:{
-      labels: nodes.map(n=>n.r.split(',')[0]),
-      datasets:[
-        {label:'NDVI',data:nodes.map(n=>n.ndvi),backgroundColor:nodes.map(n=>clrMap[n.cs]||'rgba(61,107,66,.4)'),borderColor:nodes.map(n=>bclrMap[n.cs]||'#3d6b42'),borderWidth:1},
-        {label:'NDRE (protein)',data:nodes.map(n=>n.ndre),backgroundColor:'rgba(212,168,67,.2)',borderColor:'rgba(212,168,67,.6)',borderWidth:1,type:'line',pointRadius:3,tension:.3}
+    type: 'bar',
+    data: {
+      labels:   nodes.map(n => n.r.split(',')[0]),
+      datasets: [
+        {
+          label:'NDVI',
+          data: nodes.map(n => n.ndvi || 0),
+          backgroundColor: nodes.map(n => clrMap[n.cs] || 'rgba(61,107,66,.4)'),
+          borderColor:     nodes.map(n => bclrMap[n.cs] || '#3d6b42'),
+          borderWidth: 1,
+        },
+        {
+          label:'NDRE (protein)',
+          data: nodes.map(n => n.ndre || 0),
+          backgroundColor:'rgba(212,168,67,.2)',
+          borderColor:'rgba(212,168,67,.6)',
+          borderWidth:1, type:'line', pointRadius:3, tension:.3,
+        }
       ]
     },
-    options:{responsive:true,plugins:{legend:{labels:{color:'#3d6b42',font:{family:"'Share Tech Mono'",size:10}}},tooltip:{backgroundColor:'#0a160b',borderColor:'#163318',borderWidth:1,titleColor:'#d4a843',bodyColor:'#7ab882'}},
-      scales:{x:{ticks:{color:'#3d6b42',font:{size:9}},grid:{color:'#0f2010'}},y:{min:0,max:1,ticks:{color:'#3d6b42',font:{size:9}},grid:{color:'#0f2010'}}}}
+    options:{
+      responsive:true,
+      plugins:{
+        legend:{labels:{color:'#3d6b42',font:{family:"'Share Tech Mono'",size:10}}},
+        tooltip:{backgroundColor:'#0a160b',borderColor:'#163318',borderWidth:1,titleColor:'#d4a843',bodyColor:'#7ab882'},
+      },
+      scales:{
+        x:{ticks:{color:'#3d6b42',font:{size:9}},grid:{color:'#0f2010'}},
+        y:{min:0,max:1,ticks:{color:'#3d6b42',font:{size:9}},grid:{color:'#0f2010'}},
+      }
+    }
   });
 
-  const clrText = cs => ({ready_to_cut:'var(--hay2)',approaching_ready:'var(--amber)',growing:'var(--g0)',post_cut:'var(--t3)',past_peak:'var(--red)'})[cs]||'var(--t2)';
-  document.getElementById('regionGrid').innerHTML = nodes.map(n=>`
+  // Data source label
+  const sourceLabel = usingRealData
+    ? `<span style="color:var(--g0)">● Live pipeline data · ${snap.date}</span>`
+    : `<span style="color:var(--amber)">● Illustrative data · run pipeline for real values</span>`;
+  document.getElementById('geoSourceLabel').innerHTML = sourceLabel;
+
+  document.getElementById('regionGrid').innerHTML = nodes.map(n => `
     <div class="rcard">
       <div class="rcname">${n.r}</div>
       <div class="rctype">${n.t} · ${n.use}</div>
       <div class="rclbl">NDVI</div>
-      <div class="rcbar"><div class="rcfill" style="width:${n.ndvi*100}%;background:${clrText(n.cs)}"></div></div>
+      <div class="rcbar"><div class="rcfill" style="width:${(n.ndvi||0)*100}%;background:${clrText(n.cs)}"></div></div>
       <div style="display:flex;justify-content:space-between;margin-top:2px">
-        <span class="rclbl">${n.ndvi}</span>
+        <span class="rclbl">${n.ndvi||'—'}</span>
         <span class="rcstatus" style="color:${clrText(n.cs)}">${n.cs.replace(/_/g,' ').toUpperCase()}</span>
       </div>
       <div class="rclbl" style="margin-top:5px">NDRE (protein proxy)</div>
-      <div class="rcbar"><div class="rcfill" style="width:${n.ndre*200}%;background:var(--hay)"></div></div>
-      <div class="rclbl" style="margin-top:2px">${n.ndre}</div>
+      <div class="rcbar"><div class="rcfill" style="width:${(n.ndre||0)*200}%;background:var(--hay)"></div></div>
+      <div class="rclbl" style="margin-top:2px">${n.ndre||'—'}</div>
       <div style="font-size:9px;color:var(--t3);margin-top:6px;border-top:1px solid var(--b0);padding-top:4px">
-        🛰 Last S2 visit: <span style="color:${n.lastVisit?'var(--g2)':'var(--t3)'}">
-          ${n.lastVisit||'awaiting pipeline'}
+        🛰 Last S2 visit:
+        <span style="color:${n.lastVisit ? 'var(--g2)' : 'var(--t3)'}">
+          ${n.lastVisit || 'awaiting pipeline'}
         </span>
       </div>
     </div>`).join('');
