@@ -64,17 +64,34 @@ def build_hay_signal_prompt(node_data: dict, prices: dict) -> str:
     cattle_proxy = prices.get("proxy_tickers", {}).get("LE=F", {})
     cattle_str   = f"${cattle_proxy.get('price','N/A')} | Week: {cattle_proxy.get('weekChg','N/A')}%" if cattle_proxy else "N/A"
 
+    dq       = node_data.get('data_quality', 'unknown')
+    cuts     = node_data.get('cuts_detected', 0)
+    hc_cuts  = node_data.get('cuts_high_confidence', 0)
+    cut_dates = node_data.get('cut_dates_high_conf', [])
+    sar_pct  = node_data.get('s1_scene_coverage_pct', 0)
+    mean_sar = node_data.get('mean_sar_vv_db', None)
+    notes    = node_data.get('data_notes', '')
+
     return f"""Analyze {hay_type} hay production in {region}.
 
-SPECTRAL DATA (Planetary Computer · Sentinel-2 L2A · {source}):
+REAL SATELLITE DATA (Planetary Computer):
 State/Province: {node_data.get('state')} | Country: {node_data.get('country')}
 Grade: {grade} | Primary Use: {primary_use}
-Current NDVI: {node_data.get('current_ndvi')} | Current NDRE: {node_data.get('current_ndre')}
-Current Velocity: {node_data.get('current_velocity')} | Status: {node_data.get('current_status')}
-Peak NDVI: {node_data.get('peak_ndvi')} | Peak NDRE: {node_data.get('peak_ndre')}
-Estimated cuts/season: {node_data.get('estimated_cuts')}
+Data Quality: {dq} | S2 Scenes: {node_data.get('s2_scene_count')} | Cloud Cover: {node_data.get('s2_cloud_cover_pct')}%
+SAR Coverage: {sar_pct}% of composites have aligned Sentinel-1
 
-RECENT COMPOSITES (8-day):
+SPECTRAL INDICES (current):
+NDVI: {node_data.get('current_ndvi')} | NDRE: {node_data.get('current_ndre')}
+Velocity: {node_data.get('current_velocity')} | Status: {node_data.get('current_status')}
+Peak NDVI: {node_data.get('peak_ndvi')} | Peak NDRE: {node_data.get('peak_ndre')}
+Mean SAR VV: {mean_sar} dB
+
+CUT DETECTION (SAR+optical fusion):
+Cuts detected this season: {cuts} | High-confidence cuts: {hc_cuts}
+High-confidence cut dates: {cut_dates}
+Method: {notes}
+
+RECENT COMPOSITES (last 6 periods, 8-day):
 {json.dumps(composites, indent=2)}
 
 MARKET PRICES:
@@ -130,6 +147,12 @@ def run():
 
         print(f"  [LLM ] {label}")
         try:
+            # Hard gate: refuse to run signals on synthetic or skipped data
+            dq = ndvi.get("data_quality", "unknown")
+            if dq in ("simulated", "skipped", "unknown"):
+                print(f"  [SKIP] {label} — data_quality='{dq}' (real data required)")
+                errors.append(f"{label}:no_real_data")
+                continue
             signal = chat_json(
                 prompt = build_hay_signal_prompt(ndvi, prices),
                 system = HAY_SYSTEM,
