@@ -3,6 +3,6 @@
   "region": "Oklahoma",
   "date": "2026-05-18",
   "skipped": true,
-  "reason": "Insufficient Sentinel-2 scenes (need 2+, cloud cover < 60%)",
+  "reason": "Insufficient real data (need 2+ S2 scenes, 120-day window, cloud < 60%)",
   "data_quality": "skipped"
 }
