@@ -2,21 +2,16 @@ name: Hay Intelligence Pipeline
 
 on:
   schedule:
-    - cron: '0 7 * * *'      # nightly 07:00 UTC — NDVI + prices + signals
-    - cron: '0 8 * * 5'      # Friday 08:00 UTC — hay market signals refresh
-    - cron: '30 8 1 * *'     # 1st of month — backtest data refresh
+    - cron: '0 7 * * *'
+    - cron: '0 8 * * 5'
+    - cron: '30 8 1 * *'
   workflow_dispatch:
-    inputs:
-      run_signals:
-        description: 'Force run hay signals'
-        type: boolean
-        default: true
 
 jobs:
   hay-pipeline:
-    name: Hay Intelligence
+    name: Hay Intelligence (Real Data Only)
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     permissions:
       contents: write
 
@@ -30,7 +25,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          # No cache — avoids "no requirements.txt found" error
 
       - name: Install dependencies
         run: |
@@ -47,24 +41,27 @@ jobs:
             yfinance \
             feedparser
 
-      # Step 1: Planetary Computer → hay NDVI/NDRE for 24 nodes
-      - name: Run hay NDVI pipeline
+      - name: Run hay NDVI + SAR pipeline (real data only)
         run: python scripts/hay_pipeline.py
         env:
           PC_SDK_SUBSCRIPTION_KEY: ${{ secrets.PC_SDK_SUBSCRIPTION_KEY }}
 
-      # Step 2: USDA AMS prices + proxy tickers + hay news
-      - name: Fetch hay prices and news
+      - name: Fetch hay prices
         run: python scripts/fetch_hay_prices.py
 
-      # Step 3: Ollama Cloud → hay signals for all 24 nodes
-      - name: Generate hay signals
+      - name: Generate hay signals (skips nodes without real data)
         run: python scripts/hay_signals.py
         env:
           OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
           OLLAMA_MODEL: gpt-oss:20b
 
-      # Step 4: Commit data/ outputs
+      - name: Data quality report
+        run: |
+          echo "Real data nodes:"
+          ls data/hay/ndvi/ 2>/dev/null | wc -l || echo 0
+          echo "Skipped nodes (no real data):"
+          ls data/hay/skipped/ 2>/dev/null | wc -l || echo 0
+
       - name: Commit outputs
         run: |
           git config user.name  "quantagri-bot"
