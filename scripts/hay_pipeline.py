@@ -52,7 +52,7 @@ S2_COLLECTION  = "sentinel-2-l2a"
 # Sentinel-1 RTC (Radiometrically Terrain Corrected)
 S1_COLLECTION  = "sentinel-1-rtc"
 
-MAX_CLOUD_PCT  = 20   # % — strict for hay quality assessment
+MAX_CLOUD_PCT  = 60   # % — relaxed; we take median composite so some cloud is fine
 S2_RESOLUTION  = 20   # metres
 S1_RESOLUTION  = 20   # metres
 
@@ -62,7 +62,8 @@ NDVI_CUT_DROP         = 0.20   # minimum NDVI drop to flag as potential cut
 LSWI_CUT_DROP         = 0.05   # LSWI should also drop after cutting
 
 # Minimum scenes required to produce a valid output
-MIN_S2_SCENES = 3   # need at least 3 cloud-free scenes for reliable composites
+# Lowered: median compositing over even 2 scenes is valid
+MIN_S2_SCENES = 2
 
 
 def linear_to_db(arr: np.ndarray) -> np.ndarray:
@@ -320,13 +321,27 @@ def fetch_node(node: dict, year: int, catalog) -> Optional[dict]:
     """
     Fetch real Sentinel-2 + Sentinel-1 data for one hay node.
     Returns None if insufficient real data exists — never fabricates.
+
+    Date range strategy: always pull from 90 days ago to today so that
+    early-season runs (e.g. May) still get real scenes from the current
+    growing season start rather than waiting for the full season window.
     """
     hay_type   = node["hay_type"]
     region     = node["region"]
+    today      = datetime.now(timezone.utc)
     m_start, m_end = HAY_SEASONS.get(hay_type, ("04", "10"))
-    date_range = f"{year}-{m_start}-01/{year}-{m_end}-30"
 
-    print(f"\n  [{hay_type}/{region}] {date_range}")
+    # Use a rolling 90-day lookback ending today
+    # This ensures we always have recent scenes regardless of season position
+    lookback_start = (today - timedelta(days=90)).strftime("%Y-%m-%d")
+    lookback_end   = today.strftime("%Y-%m-%d")
+
+    # Also build the full-season range for context in the output
+    season_range = f"{year}-{m_start}-01/{year}-{m_end}-30"
+    date_range   = f"{lookback_start}/{lookback_end}"
+
+    print(f"\n  [{hay_type}/{region}]")
+    print(f"    Season: {season_range} | Fetching: {date_range} (90-day rolling)")
 
     # ── Sentinel-2 (required) ─────────────────────────────────────────
     s2 = fetch_sentinel2(catalog, node, date_range)
