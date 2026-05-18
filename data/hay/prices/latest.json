@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-05-18T09:53:17.633364+00:00",
+  "fetchedAt": "2026-05-18T09:59:49.494865+00:00",
   "date": "2026-05-18",
   "usda_benchmarks": {
     "Alfalfa": {
@@ -368,12 +368,12 @@
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 469.75,
-      "dayChg": 3.07,
-      "weekChg": 1.95,
+      "price": 470.25,
+      "dayChg": 3.18,
+      "weekChg": 2.06,
       "high52w": 473.75,
       "low52w": 371.5,
-      "pctOf52wH": 99.2,
+      "pctOf52wH": 99.3,
       "lastDate": "2026-05-18"
     },
     "ZS=F": {

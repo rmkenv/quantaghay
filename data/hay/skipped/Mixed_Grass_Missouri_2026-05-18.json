@@ -3,6 +3,6 @@
   "region": "Missouri",
   "date": "2026-05-18",
   "skipped": true,
-  "reason": "Insufficient Sentinel-2 scenes (need 3+, cloud cover < 20%)",
+  "reason": "Insufficient Sentinel-2 scenes (need 2+, cloud cover < 60%)",
   "data_quality": "skipped"
 }
