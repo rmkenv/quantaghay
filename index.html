@@ -907,7 +907,8 @@ function renderSignal(sig, hayType, region, ndvi, model) {
     <span class="cut-badge cut-${cs}">${cs.replace(/_/g,' ')}</span>
     ${sig.key_risk ? `<span style="font-size:10px;color:var(--amber)">⚠ ${sig.key_risk}</span>` : ''}
     ${sig.days_to_next_cutting ? `<span style="font-size:10px;color:var(--t2)">Next cut: ~${sig.days_to_next_cutting} days</span>` : ''}
-    ${sig.export_grade_eligible ? `<span class="pill ph">Export Grade</span>` : ''}`;
+    ${sig.export_grade_eligible ? `<span class="pill ph">Export Grade</span>` : ''}
+    ${lastSignal?.ndvi?.at(-1)?.date ? `<span style="font-size:9px;color:var(--t3);border:1px solid var(--b1);padding:1px 6px">🛰 Last visit: ${lastSignal.ndvi.at(-1).date}</span>` : ''}`;
 
   // Confidence bar
   document.getElementById('confFill').style.width = ((sig.confidence||0)*100)+'%';
@@ -997,19 +998,29 @@ function renderNDVIChart(data) {
 
 // ── Geo view ───────────────────────────────────────────────────────
 function renderGeoView() {
-  const nodes = [
-    {r:'Imperial Valley, CA',   t:'Alfalfa',      ndvi:.78,ndre:.42,cs:'ready_to_cut',  use:'Dairy/Export'},
-    {r:'Columbia Basin, WA',    t:'Alfalfa/Tim.',  ndvi:.74,ndre:.39,cs:'approaching_ready',use:'Export'},
-    {r:'Snake River Plain, ID', t:'Alfalfa',      ndvi:.71,ndre:.38,cs:'approaching_ready',use:'Dairy'},
-    {r:'San Joaquin Valley, CA',t:'Alfalfa',      ndvi:.68,ndre:.36,cs:'growing',        use:'Dairy'},
-    {r:'Central Kansas',        t:'Alfalfa',      ndvi:.63,ndre:.33,cs:'growing',        use:'Beef'},
-    {r:'Nebraska Panhandle',    t:'Alfalfa',      ndvi:.61,ndre:.32,cs:'growing',        use:'Beef'},
-    {r:'Central Oregon',        t:'Timothy',      ndvi:.58,ndre:.30,cs:'post_cut',       use:'Export'},
-    {r:'Southern Alberta',      t:'Alfalfa',      ndvi:.55,ndre:.29,cs:'post_cut',       use:'Beef'},
-    {r:'Iowa',                  t:'Mixed Grass',  ndvi:.64,ndre:.31,cs:'ready_to_cut',   use:'Beef'},
-    {r:'South Texas',           t:'Bermudagrass', ndvi:.66,ndre:.28,cs:'approaching_ready',use:'Beef'},
-    {r:'Willamette Valley, OR', t:'Orchardgrass', ndvi:.69,ndre:.34,cs:'approaching_ready',use:'Equine'},
-    {r:'Ontario, CA',           t:'Timothy',      ndvi:.52,ndre:.26,cs:'post_cut',       use:'Dairy'},
+  // Try to use real snapshot data if loaded, fall back to illustrative data
+  const snap = window._snapshotData;
+  const nodes = snap ? snap.signals.map(s => ({
+    r:         s.region || '—',
+    t:         s.hay_type || '—',
+    ndvi:      s.current_ndvi || 0,
+    ndre:      s.current_ndre || 0,
+    cs:        s.cutting_status || 'stable',
+    use:       s.primary_use || '—',
+    lastVisit: s.current_date || null,
+  })) : [
+    {r:'Imperial Valley, CA',   t:'Alfalfa',      ndvi:.78,ndre:.42,cs:'ready_to_cut',  use:'Dairy/Export', lastVisit:null},
+    {r:'Columbia Basin, WA',    t:'Alfalfa/Tim.',  ndvi:.74,ndre:.39,cs:'approaching_ready',use:'Export',   lastVisit:null},
+    {r:'Snake River Plain, ID', t:'Alfalfa',      ndvi:.71,ndre:.38,cs:'approaching_ready',use:'Dairy',    lastVisit:null},
+    {r:'San Joaquin Valley, CA',t:'Alfalfa',      ndvi:.68,ndre:.36,cs:'growing',        use:'Dairy',       lastVisit:null},
+    {r:'Central Kansas',        t:'Alfalfa',      ndvi:.63,ndre:.33,cs:'growing',        use:'Beef',        lastVisit:null},
+    {r:'Nebraska Panhandle',    t:'Alfalfa',      ndvi:.61,ndre:.32,cs:'growing',        use:'Beef',        lastVisit:null},
+    {r:'Central Oregon',        t:'Timothy',      ndvi:.58,ndre:.30,cs:'post_cut',       use:'Export',      lastVisit:null},
+    {r:'Southern Alberta',      t:'Alfalfa',      ndvi:.55,ndre:.29,cs:'post_cut',       use:'Beef',        lastVisit:null},
+    {r:'Iowa',                  t:'Mixed Grass',  ndvi:.64,ndre:.31,cs:'ready_to_cut',   use:'Beef',        lastVisit:null},
+    {r:'South Texas',           t:'Bermudagrass', ndvi:.66,ndre:.28,cs:'approaching_ready',use:'Beef',     lastVisit:null},
+    {r:'Willamette Valley, OR', t:'Orchardgrass', ndvi:.69,ndre:.34,cs:'approaching_ready',use:'Equine',   lastVisit:null},
+    {r:'Ontario, CA',           t:'Timothy',      ndvi:.52,ndre:.26,cs:'post_cut',       use:'Dairy',       lastVisit:null},
   ];
 
   const clrMap = {ready_to_cut:'rgba(212,168,67,.7)',approaching_ready:'rgba(212,168,67,.4)',growing:'rgba(0,255,106,.5)',post_cut:'rgba(61,107,66,.5)',past_peak:'rgba(255,61,61,.5)'};
@@ -1044,6 +1055,11 @@ function renderGeoView() {
       <div class="rclbl" style="margin-top:5px">NDRE (protein proxy)</div>
       <div class="rcbar"><div class="rcfill" style="width:${n.ndre*200}%;background:var(--hay)"></div></div>
       <div class="rclbl" style="margin-top:2px">${n.ndre}</div>
+      <div style="font-size:9px;color:var(--t3);margin-top:6px;border-top:1px solid var(--b0);padding-top:4px">
+        🛰 Last S2 visit: <span style="color:${n.lastVisit?'var(--g2)':'var(--t3)'}">
+          ${n.lastVisit||'awaiting pipeline'}
+        </span>
+      </div>
     </div>`).join('');
 }
 
@@ -1217,6 +1233,7 @@ async function loadSnapshot() {
     const r = await fetch(BASE_URL + '/data/hay/signals/latest.json?_='+Date.now());
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const snap = await r.json();
+    window._snapshotData = snap;
     renderSnapshot(snap);
     log(`Snapshot: ${snap.signalCount} nodes · ${snap.date}`, 'ok');
   } catch(e) {
@@ -1243,17 +1260,39 @@ function renderSnapshot(data) {
   }
   const csColor = cs => ({ready_to_cut:'var(--hay2)',approaching_ready:'var(--amber)',growing:'var(--g0)',post_cut:'var(--t3)',past_peak:'var(--red)'})[cs]||'var(--t2)';
   const bcls = cs => cs==='ready_to_cut'||cs==='approaching_ready'?'':'bear';
-  const cards = sigs.map(s=>`
+
+  // Freshness: days since last satellite visit
+  const daysSince = dateStr => {
+    if (!dateStr) return null;
+    const diff = Math.floor((Date.now() - new Date(dateStr)) / 86400000);
+    return diff;
+  };
+  const freshnessColor = d => d === null ? 'var(--t3)' : d <= 8 ? 'var(--g0)' : d <= 16 ? 'var(--amber)' : 'var(--red)';
+  const freshnessLabel = d => d === null ? 'No date' : d === 0 ? 'Today' : d === 1 ? '1 day ago' : `${d} days ago`;
+
+  const cards = sigs.map(s=>{
+    const d = daysSince(s.current_date || s.ndviSource_date);
+    const fc = freshnessColor(d);
+    const fl = freshnessLabel(d);
+    return `
     <div class="snap-card ${bcls(s.cutting_status)}">
       <div style="font-size:11px;font-weight:600;color:var(--hay2)">${s.hay_type||'—'}</div>
-      <div style="font-size:9px;color:var(--t2);margin-bottom:6px">${s.region||'—'}</div>
+      <div style="font-size:9px;color:var(--t2);margin-bottom:4px">${s.region||'—'}</div>
       <div style="font-size:12px;font-weight:600;color:${csColor(s.cutting_status)}">${(s.cutting_status||'—').replace(/_/g,' ').toUpperCase()}</div>
       <div class="conf-track" style="margin:5px 0 3px"><div class="conf-fill" style="width:${(s.confidence||0)*100}%"></div></div>
-      <div style="font-size:9px;color:var(--t2)">${s.quality_outlook||'—'} · ${s.supply_sentiment||'—'} supply · ${s.strategy?.action||'—'}</div>
-    </div>`).join('');
+      <div style="font-size:9px;color:var(--t2);margin-bottom:4px">${s.quality_outlook||'—'} · ${s.supply_sentiment||'—'} supply · ${s.strategy?.action||'—'}</div>
+      <div style="font-size:9px;display:flex;align-items:center;gap:4px;border-top:1px solid var(--b0);padding-top:4px;margin-top:2px">
+        <span style="color:var(--t3)">🛰</span>
+        <span style="color:${fc}">${fl}</span>
+        ${s.current_date ? `<span style="color:var(--t3)">(${s.current_date})</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 
   const rows = sigs.map(s=>{
     const cls = s.strategy?.action==='LONG'?'tg':s.strategy?.action==='SHORT'?'tr':'ty';
+    const d   = daysSince(s.current_date);
+    const fc  = freshnessColor(d);
     return `<tr>
       <td class="th">${s.hay_type||'—'}</td>
       <td>${s.region||'—'}</td>
@@ -1263,18 +1302,22 @@ function renderSnapshot(data) {
       <td class="${cls}">${s.strategy?.action||'—'}</td>
       <td>${((s.confidence||0)*100).toFixed(0)}%</td>
       <td>${s.spectral_velocity||'—'}</td>
+      <td style="color:${fc};font-size:9px">🛰 ${s.current_date||'—'}</td>
     </tr>`;
   }).join('');
 
   document.getElementById('snapContent').innerHTML = `
-    <div style="font-size:10px;color:var(--t2);margin-bottom:12px">
-      Generated: <strong>${data.date||'—'}</strong> · ${sigs.length} nodes
+    <div style="font-size:10px;color:var(--t2);margin-bottom:12px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+      <span>Generated: <strong>${data.date||'—'}</strong> · ${sigs.length} nodes</span>
+      <span style="color:var(--g0)">🛰 green = visited ≤8d</span>
+      <span style="color:var(--amber)">🛰 amber = 9-16d</span>
+      <span style="color:var(--red)">🛰 red = >16d</span>
     </div>
     <div class="snap-grid">${cards}</div>
     <div class="sh">Full Signal Table</div>
     <div class="lt-wrap"><table>
       <thead><tr><th>Hay Type</th><th>Region</th><th>Cut Status</th><th>Grade</th>
-        <th>Supply</th><th>Action</th><th>Conf</th><th>Velocity</th></tr></thead>
+        <th>Supply</th><th>Action</th><th>Conf</th><th>Velocity</th><th>Last S2 Visit</th></tr></thead>
       <tbody>${rows}</tbody>
     </table></div>`;
 }
