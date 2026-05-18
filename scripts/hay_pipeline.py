@@ -1,385 +1,428 @@
 """
-QuantAgri Hay — Real Data Pipeline (No Synthetic Fallback)
-===========================================================
-Pulls REAL Sentinel-2 L2A + Sentinel-1 RTC from Planetary Computer.
+QuantAgri Hay — Real Data Pipeline
+====================================
+Pulls REAL Sentinel-2 L2A from Planetary Computer using
+lightweight STAC + COG (Cloud-Optimised GeoTIFF) reads.
 
-Sentinel-2: NDVI, NDRE (protein proxy), LSWI (moisture)
-Sentinel-1: VV backscatter — the key cut detection signal
+NO stackstac. NO xarray. NO in-memory raster stacks.
+Each scene: download a small bbox chip via GDAL/rasterio,
+compute indices, aggregate. Runs in < 2GB RAM per node.
 
-CUT DETECTION LOGIC (evidence-based, no thresholds):
-  A cutting event is confirmed when ALL of the following occur
-  within the same 8-day window:
-    1. NDVI drops > 0.20 from prior composite (abrupt optical drop)
-    2. Sentinel-1 VV backscatter INCREASES > 1.5 dB simultaneously
-       (freshly cut stubble is rougher → higher radar backscatter)
-    3. LSWI drops (moisture lost from cut biomass)
+Sentinel-1 SAR for cut detection: same COG approach.
 
-  This SAR+optical fusion eliminates false positives from:
-  - Drought stress (NDVI drops but SAR stays flat or decreases)
-  - Cloud gaps (missing data, not a real event)
-  - Sensor noise (isolated single-pixel anomalies)
+CUT DETECTION — SAR + Optical fusion:
+  Cut confirmed when in same 8-day window:
+  1. NDVI drops > 0.20  (optical biomass removal)
+  2. Sentinel-1 VV increases > 1.5 dB  (stubble = rougher surface)
+  Both must fire — eliminates drought/stress false positives.
 
-If PC returns no scenes for a node → node is SKIPPED entirely.
-No simulation. No fabricated data. Missing = missing.
+No synthetic data. No simulation. If data is insufficient → skip.
 
-Output: data/hay/ndvi/{hay_type}_{region}_{YYYY-MM-DD}.json
-Each file has a "data_quality" field: "real_s2_s1" | "real_s2_only" | "skipped"
+Output: data/hay/ndvi/{HayType}_{Region}_{YYYY-MM-DD}.json
 """
 
 import json
+import os
 import sys
 import warnings
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Optional
+from collections import defaultdict
 
 import numpy as np
+import requests
 
 warnings.filterwarnings("ignore")
 sys.path.insert(0, str(Path(__file__).parent))
-from hay_config import (
-    HAY_NODES, HAY_SEASONS, HAY_DIR,
-    CUTTING_NDVI_THRESHOLDS, PC_STAC_URL, RESOLUTION
-)
+from hay_config import HAY_NODES, HAY_SEASONS, HAY_DIR, CUTTING_NDVI_THRESHOLDS, PC_STAC_URL
 
 NDVI_DIR = HAY_DIR / "ndvi"
 SKIP_DIR = HAY_DIR / "skipped"
-NDVI_DIR.mkdir(parents=True, exist_ok=True)
-SKIP_DIR.mkdir(parents=True, exist_ok=True)
+for d in [NDVI_DIR, SKIP_DIR]:
+    d.mkdir(parents=True, exist_ok=True)
 
-# Sentinel-2 L2A collection
 S2_COLLECTION  = "sentinel-2-l2a"
-# Sentinel-1 RTC (Radiometrically Terrain Corrected)
 S1_COLLECTION  = "sentinel-1-rtc"
-
-MAX_CLOUD_PCT  = 60   # % — relaxed; we take median composite so some cloud is fine
-S2_RESOLUTION  = 20   # metres
-S1_RESOLUTION  = 20   # metres
-
-# SAR cut detection thresholds (evidence-based)
-SAR_CUT_DB_INCREASE   = 1.5    # dB VV increase = likely cut
-NDVI_CUT_DROP         = 0.20   # minimum NDVI drop to flag as potential cut
-LSWI_CUT_DROP         = 0.05   # LSWI should also drop after cutting
-
-# Minimum scenes required to produce a valid output
-# Lowered: median compositing over even 2 scenes is valid
-MIN_S2_SCENES = 2
+MAX_CLOUD_PCT  = 60      # relaxed — median composite handles residual cloud
+MIN_VALID_PX   = 100     # minimum valid pixels per scene chip
+MIN_S2_SCENES  = 2       # minimum scenes for a valid composite
+LOOKBACK_DAYS  = 120     # rolling lookback window
+COMPOSITE_DAYS = 8       # composite period in days
+SAR_CUT_DB     = 1.5     # dB VV increase = cut signal
+NDVI_CUT_DROP  = 0.20    # NDVI drop threshold for cut detection
 
 
-def linear_to_db(arr: np.ndarray) -> np.ndarray:
-    """Convert Sentinel-1 linear power to dB."""
-    return 10.0 * np.log10(np.clip(arr, 1e-10, None))
+# ── STAC search ───────────────────────────────────────────────────────
+def stac_search(collection: str, bbox: list, date_range: str,
+                extra_query: dict = None) -> list[dict]:
+    """Query PC STAC API, return list of items."""
+    url    = f"{PC_STAC_URL}/search"
+    params = {
+        "collections": [collection],
+        "bbox":        bbox,
+        "datetime":    date_range,
+        "limit":       100,
+    }
+    if extra_query:
+        params["query"] = extra_query
+
+    try:
+        r = requests.post(url, json=params, timeout=30)
+        r.raise_for_status()
+        return r.json().get("features", [])
+    except Exception as e:
+        print(f"    [STAC ERR] {collection}: {e}")
+        return []
 
 
-def detect_cuts_sar_optical(
-    ndvi_vals: list[float],
-    ndre_vals: list[float],
-    lswi_vals: list[float],
-    sar_vv_db: list[Optional[float]],
-    times: list[str],
-    hay_type: str,
-) -> list[dict]:
+# ── COG chip reader ───────────────────────────────────────────────────
+def read_cog_chip(href: str, bbox: list, token: str = None) -> Optional[np.ndarray]:
     """
-    Fuse Sentinel-2 optical indices with Sentinel-1 SAR backscatter
-    to detect cutting events with high confidence.
-
-    Returns list of composite dicts with:
-    - All spectral indices
-    - ndvi_velocity (dNDVI/dt per 8-day)
-    - sar_vv_db (Sentinel-1 VV backscatter)
-    - sar_delta_db (change in VV from prior period)
-    - cut_detected (bool) — only True when both SAR and optical confirm
-    - cut_confidence ("high"|"medium"|"low"|None)
-    - cutting_status (derived from real evidence)
+    Read a small spatial chip from a Cloud-Optimised GeoTIFF using GDAL.
+    Returns 2D float32 array or None on failure.
     """
-    n = len(ndvi_vals)
-    velocity = list(np.gradient(ndvi_vals)) if n > 1 else [0.0] * n
+    try:
+        import rasterio
+        from rasterio.windows import from_bounds
+        from rasterio.enums import Resampling
+
+        env = {}
+        if token:
+            env["GDAL_HTTP_HEADERS"] = f"Authorization: Bearer {token}"
+
+        # Sign URL via PC SDK if available
+        href_signed = href
+        try:
+            import planetary_computer as pc
+            href_signed = pc.sign(href)
+        except Exception:
+            pass
+
+        with rasterio.Env(**env):
+            with rasterio.open(href_signed) as src:
+                window = from_bounds(*bbox, transform=src.transform)
+                # Resample to ~20m equiv
+                out_shape = (1, max(1, int(window.height)), max(1, int(window.width)))
+                data = src.read(
+                    1,
+                    window=window,
+                    out_shape=out_shape[1:],
+                    resampling=Resampling.bilinear,
+                )
+                # Mask nodata
+                nodata = src.nodata or 0
+                arr = data.astype("float32")
+                arr[arr == nodata] = np.nan
+                return arr
+    except Exception as e:
+        return None
+
+
+def read_cog_mean(href: str, bbox: list, scale: float = 1.0) -> Optional[float]:
+    """Read COG chip and return spatial mean, scaled."""
+    arr = read_cog_chip(href, bbox)
+    if arr is None:
+        return None
+    valid = arr[~np.isnan(arr)]
+    if len(valid) < MIN_VALID_PX:
+        return None
+    return float(np.nanmean(valid)) * scale
+
+
+# ── Sentinel-2 processing ─────────────────────────────────────────────
+def process_s2_item(item: dict, bbox: list) -> Optional[dict]:
+    """Extract NDVI, NDRE, LSWI from one Sentinel-2 scene."""
+    assets = item.get("assets", {})
+
+    hrefs = {}
+    for band, key in [("B04", "red"), ("B05", "rededge"),
+                      ("B08", "nir-08"), ("B11", "swir-16")]:
+        # Try multiple possible asset key names
+        for k in [band.lower(), key, band]:
+            if k in assets:
+                hrefs[band] = assets[k].get("href")
+                break
+
+    # Need B04, B08 for NDVI minimum; B05 and B11 for full suite
+    if not hrefs.get("B04") or not hrefs.get("B08"):
+        return None
+
+    scale = 1 / 10000.0
+
+    b4  = read_cog_mean(hrefs["B04"], bbox, scale)
+    b8  = read_cog_mean(hrefs["B08"], bbox, scale)
+    if b4 is None or b8 is None:
+        return None
+
+    b5  = read_cog_mean(hrefs.get("B05", ""), bbox, scale) if hrefs.get("B05") else None
+    b11 = read_cog_mean(hrefs.get("B11", ""), bbox, scale) if hrefs.get("B11") else None
+
+    eps = 1e-10
+    ndvi = (b8 - b4) / (b8 + b4 + eps)
+    ndre = (b8 - b5) / (b8 + b5 + eps) if b5 is not None else None
+    lswi = (b8 - b11) / (b8 + b11 + eps) if b11 is not None else None
+
+    # Clip to valid range
+    ndvi = float(np.clip(ndvi, -1, 1))
+    ndre = float(np.clip(ndre, -1, 1)) if ndre is not None else None
+    lswi = float(np.clip(lswi, -1, 1)) if lswi is not None else None
+
+    date_str = item.get("properties", {}).get("datetime", "")[:10]
+    cloud    = item.get("properties", {}).get("eo:cloud_cover", None)
+
+    return {
+        "date":  date_str,
+        "ndvi":  round(ndvi, 4),
+        "ndre":  round(ndre, 4) if ndre is not None else None,
+        "lswi":  round(lswi, 4) if lswi is not None else None,
+        "cloud": round(cloud, 1) if cloud is not None else None,
+    }
+
+
+# ── Sentinel-1 processing ─────────────────────────────────────────────
+def process_s1_item(item: dict, bbox: list) -> Optional[dict]:
+    """Extract VV backscatter in dB from one Sentinel-1 scene."""
+    assets = item.get("assets", {})
+
+    href = None
+    for k in ["vv", "VV", "vh", "VH"]:
+        if k in assets:
+            href = assets[k].get("href")
+            break
+    if not href:
+        return None
+
+    arr = read_cog_chip(href, bbox)
+    if arr is None:
+        return None
+    valid = arr[~np.isnan(arr) & (arr > 0)]
+    if len(valid) < MIN_VALID_PX:
+        return None
+
+    vv_linear = float(np.nanmean(valid))
+    vv_db     = 10.0 * np.log10(max(vv_linear, 1e-10))
+    date_str  = item.get("properties", {}).get("datetime", "")[:10]
+
+    return {
+        "date":    date_str,
+        "vv_db":   round(vv_db, 3),
+        "vv_linear": round(vv_linear, 6),
+    }
+
+
+# ── Composite builder ─────────────────────────────────────────────────
+def build_composites(scenes: list[dict], period_days: int = COMPOSITE_DAYS) -> list[dict]:
+    """
+    Bin scenes into fixed periods and take median.
+    Returns list of composite dicts sorted by date.
+    """
+    if not scenes:
+        return []
+
+    # Parse dates and find range
+    dated = [(datetime.strptime(s["date"], "%Y-%m-%d"), s) for s in scenes if s.get("date")]
+    if not dated:
+        return []
+    dated.sort(key=lambda x: x[0])
+    start = dated[0][0]
+
+    # Bin into periods
+    bins: dict[int, list] = defaultdict(list)
+    for dt, scene in dated:
+        period = (dt - start).days // period_days
+        bins[period].append(scene)
+
     composites = []
+    for period_idx in sorted(bins.keys()):
+        group   = bins[period_idx]
+        period_start = start + timedelta(days=period_idx * period_days)
+        date_str = period_start.strftime("%Y-%m-%d")
 
-    for i in range(n):
-        ndvi = ndvi_vals[i]
-        ndre = ndre_vals[i]
-        lswi = lswi_vals[i]
-        vel  = float(velocity[i])
-        vv   = sar_vv_db[i] if i < len(sar_vv_db) else None
+        def median_of(key):
+            vals = [s[key] for s in group if s.get(key) is not None]
+            return round(float(np.median(vals)), 4) if vals else None
 
-        # SAR delta (change from prior period)
-        sar_delta = None
-        if vv is not None and i > 0:
-            prev_vv = next((sar_vv_db[j] for j in range(i-1, -1, -1) if sar_vv_db[j] is not None), None)
-            if prev_vv is not None:
-                sar_delta = round(vv - prev_vv, 3)
-
-        # NDVI delta from prior period
-        ndvi_delta = round(ndvi - ndvi_vals[i-1], 4) if i > 0 else 0.0
-
-        # ── Cut detection (SAR + optical fusion) ────────────────────
-        cut_detected   = False
-        cut_confidence = None
-
-        ndvi_dropped   = ndvi_delta < -NDVI_CUT_DROP
-        lswi_dropped   = (lswi - lswi_vals[i-1] < -LSWI_CUT_DROP) if i > 0 else False
-
-        if ndvi_dropped:
-            if vv is not None and sar_delta is not None and sar_delta > SAR_CUT_DB_INCREASE:
-                # Both optical AND SAR confirm cut
-                cut_detected   = True
-                cut_confidence = "high" if lswi_dropped else "medium"
-            elif vv is None:
-                # No SAR data — optical-only, lower confidence
-                cut_detected   = True
-                cut_confidence = "low_no_sar"
-            # else: NDVI dropped but SAR didn't increase → drought/stress, not a cut
-
-        # ── Cutting status from real evidence ────────────────────────
-        thresholds = CUTTING_NDVI_THRESHOLDS.get(hay_type, CUTTING_NDVI_THRESHOLDS["Mixed_Grass"])
-
-        if cut_detected:
-            status = "post_cut"
-        elif ndvi < thresholds["past_peak"] and vel < 0:
-            # NDVI declining from peak but no confirmed cut yet
-            status = "declining_unconfirmed"
-        elif ndvi >= thresholds["peak"] and vel > -0.01:
-            status = "ready_to_cut"
-        elif ndvi >= thresholds["ready"] and vel > 0:
-            status = "approaching_ready"
-        elif ndvi < 0.20 and i > 0 and ndvi_vals[i-1] > 0.45:
-            # Sudden very low NDVI after high — probable recent cut (no SAR)
-            status = "post_cut_probable"
-        elif vel > 0.015:
-            status = "growing_fast"
-        elif vel > 0:
-            status = "growing"
-        else:
-            status = "stable_low"
-
-        composites.append({
-            "date":            times[i] if i < len(times) else f"period_{i}",
-            "ndvi":            round(float(ndvi), 4),
-            "ndre":            round(float(ndre), 4),
-            "lswi":            round(float(lswi), 4),
-            "ndvi_velocity":   round(vel, 5),
-            "ndvi_delta":      round(ndvi_delta, 4),
-            "sar_vv_db":       round(vv, 3) if vv is not None else None,
-            "sar_delta_db":    sar_delta,
-            "cut_detected":    cut_detected,
-            "cut_confidence":  cut_confidence,
-            "cutting_status":  status,
-        })
+        comp = {
+            "date":       date_str,
+            "ndvi":       median_of("ndvi"),
+            "ndre":       median_of("ndre"),
+            "lswi":       median_of("lswi"),
+            "scene_count": len(group),
+            "avg_cloud":  median_of("cloud"),
+        }
+        if comp["ndvi"] is not None:
+            composites.append(comp)
 
     return composites
 
 
-def fetch_sentinel2(catalog, node: dict, date_range: str) -> Optional[dict]:
-    """Fetch Sentinel-2 L2A for a node. Returns None if insufficient data."""
-    bbox     = node["bbox"]
+def align_sar_to_composites(
+    s1_scenes: list[dict],
+    composites: list[dict],
+    tolerance_days: int = 4
+) -> list[Optional[float]]:
+    """For each S2 composite date, find nearest S1 scene within tolerance."""
+    sar_lookup = {
+        datetime.strptime(s["date"], "%Y-%m-%d"): s["vv_db"]
+        for s in s1_scenes if s.get("date") and s.get("vv_db") is not None
+    }
+
+    aligned = []
+    for comp in composites:
+        comp_dt = datetime.strptime(comp["date"], "%Y-%m-%d")
+        best_vv = None
+        best_d  = 999
+        for sar_dt, vv in sar_lookup.items():
+            d = abs((sar_dt - comp_dt).days)
+            if d <= tolerance_days and d < best_d:
+                best_vv = vv
+                best_d  = d
+        aligned.append(best_vv)
+    return aligned
+
+
+# ── Cut detection ─────────────────────────────────────────────────────
+def detect_cuts(composites: list[dict], sar_aligned: list[Optional[float]],
+                hay_type: str) -> list[dict]:
+    """
+    Apply SAR + optical fusion cut detection to composites.
+    Returns composites enriched with cut detection fields.
+    """
+    thresholds = CUTTING_NDVI_THRESHOLDS.get(hay_type, CUTTING_NDVI_THRESHOLDS["Mixed_Grass"])
+    ndvi_vals  = [c["ndvi"] for c in composites]
+    velocity   = list(np.gradient(ndvi_vals)) if len(ndvi_vals) > 1 else [0.0] * len(ndvi_vals)
+
+    enriched = []
+    for i, comp in enumerate(composites):
+        ndvi     = comp["ndvi"]
+        vel      = float(velocity[i])
+        sar_vv   = sar_aligned[i] if i < len(sar_aligned) else None
+
+        # NDVI delta from prior period
+        ndvi_delta = round(ndvi - ndvi_vals[i-1], 4) if i > 0 else 0.0
+
+        # SAR delta
+        prev_sar = next((sar_aligned[j] for j in range(i-1, -1, -1)
+                         if j < len(sar_aligned) and sar_aligned[j] is not None), None)
+        sar_delta = round(sar_vv - prev_sar, 3) if (sar_vv is not None and prev_sar is not None) else None
+
+        # Cut detection
+        ndvi_dropped = ndvi_delta < -NDVI_CUT_DROP
+        cut_detected = False
+        cut_confidence = None
+
+        if ndvi_dropped:
+            if sar_delta is not None and sar_delta > SAR_CUT_DB:
+                cut_detected   = True
+                cut_confidence = "high"
+            elif sar_vv is None:
+                cut_detected   = True
+                cut_confidence = "low_no_sar"
+            # sar present but didn't increase → drought/stress not a cut
+
+        # Cutting status
+        if cut_detected:
+            status = "post_cut"
+        elif ndvi is not None and ndvi >= thresholds["peak"] and vel > -0.01:
+            status = "ready_to_cut"
+        elif ndvi is not None and ndvi >= thresholds["ready"] and vel > 0:
+            status = "approaching_ready"
+        elif vel > 0.01:
+            status = "growing"
+        elif ndvi is not None and ndvi < 0.20 and i > 0 and ndvi_vals[i-1] > 0.40:
+            status = "post_cut_probable"
+        else:
+            status = "stable"
+
+        enriched.append({
+            **comp,
+            "ndvi_velocity":  round(vel, 5),
+            "ndvi_delta":     ndvi_delta,
+            "sar_vv_db":      sar_vv,
+            "sar_delta_db":   sar_delta,
+            "cut_detected":   cut_detected,
+            "cut_confidence": cut_confidence,
+            "cutting_status": status,
+        })
+
+    return enriched
+
+
+# ── Main node fetcher ─────────────────────────────────────────────────
+def fetch_node(node: dict, year: int) -> Optional[dict]:
+    """
+    Fetch real Sentinel-2 + Sentinel-1 for one hay node.
+    Returns None if insufficient data — never fabricates.
+    """
     hay_type = node["hay_type"]
     region   = node["region"]
+    bbox     = node["bbox"]
 
-    try:
-        import stackstac
-        import planetary_computer as pc
+    today  = datetime.now(timezone.utc)
+    start  = (today - timedelta(days=LOOKBACK_DAYS)).strftime("%Y-%m-%d")
+    end    = today.strftime("%Y-%m-%d")
+    date_range = f"{start}/{end}"
 
-        items = catalog.search(
-            collections=[S2_COLLECTION],
-            bbox=bbox,
-            datetime=date_range,
-            query={"eo:cloud_cover": {"lt": MAX_CLOUD_PCT}},
-        ).item_collection()
+    print(f"\n  [{hay_type}/{region}] {date_range}")
 
-        scene_count = len(items)
-        print(f"    [S2  ] {scene_count} scenes")
+    # ── Sentinel-2 scenes ─────────────────────────────────────────────
+    s2_items = stac_search(
+        S2_COLLECTION, bbox, date_range,
+        extra_query={"eo:cloud_cover": {"lt": MAX_CLOUD_PCT}}
+    )
+    print(f"    [S2  ] {len(s2_items)} STAC items")
 
-        if scene_count < MIN_S2_SCENES:
-            print(f"    [SKIP] Only {scene_count} S2 scenes — need {MIN_S2_SCENES} minimum")
-            return None
-
-        stack = stackstac.stack(
-            items,
-            assets=["B04", "B05", "B08", "B11"],
-            resolution=S2_RESOLUTION,
-            bounds_latlon=bbox,
-            dtype="float32",
-        )
-
-        eps = 1e-10
-        b4  = stack.sel(band="B04") / 10000.0
-        b5  = stack.sel(band="B05") / 10000.0
-        b8  = stack.sel(band="B08") / 10000.0
-        b11 = stack.sel(band="B11") / 10000.0
-
-        ndvi = ((b8 - b4)  / (b8 + b4  + eps)).clip(-1, 1)
-        ndre = ((b8 - b5)  / (b8 + b5  + eps)).clip(-1, 1)
-        lswi = ((b8 - b11) / (b8 + b11 + eps)).clip(-1, 1)
-
-        # 8-day median composites → spatial mean over bbox
-        ndvi_c = ndvi.resample(time="8D").median().mean(dim=["x", "y"])
-        ndre_c = ndre.resample(time="8D").median().mean(dim=["x", "y"])
-        lswi_c = lswi.resample(time="8D").median().mean(dim=["x", "y"])
-
-        # Drop periods with NaN (cloud gaps)
-        valid_mask = ~np.isnan(ndvi_c.values)
-        times_all  = [str(t)[:10] for t in ndvi_c.time.values]
-
-        ndvi_vals = [float(v) for v, m in zip(ndvi_c.values, valid_mask) if m]
-        ndre_vals = [float(v) for v, m in zip(ndre_c.values, valid_mask) if m]
-        lswi_vals = [float(v) for v, m in zip(lswi_c.values, valid_mask) if m]
-        times     = [t for t, m in zip(times_all, valid_mask) if m]
-
-        if len(ndvi_vals) < MIN_S2_SCENES:
-            print(f"    [SKIP] Only {len(ndvi_vals)} valid composites after cloud masking")
-            return None
-
-        avg_cloud = float(
-            sum(i.properties.get("eo:cloud_cover", 0) for i in items) / scene_count
-        )
-
-        return {
-            "ndvi_vals":   ndvi_vals,
-            "ndre_vals":   ndre_vals,
-            "lswi_vals":   lswi_vals,
-            "times":       times,
-            "scene_count": scene_count,
-            "cloud_cover_pct": round(avg_cloud, 1),
-        }
-
-    except Exception as e:
-        print(f"    [ERR ] S2 fetch: {e}")
+    if len(s2_items) < MIN_S2_SCENES:
+        print(f"    [SKIP] Only {len(s2_items)} S2 items (need {MIN_S2_SCENES}+)")
         return None
 
+    # Process scenes
+    s2_scenes = []
+    for item in s2_items:
+        result = process_s2_item(item, bbox)
+        if result:
+            s2_scenes.append(result)
 
-def fetch_sentinel1(catalog, node: dict, date_range: str, s2_times: list[str]) -> list[Optional[float]]:
-    """
-    Fetch Sentinel-1 RTC VV backscatter for same date range.
-    Returns list aligned to s2_times — None where no SAR scene within ±4 days.
-    """
-    bbox = node["bbox"]
+    print(f"    [S2  ] {len(s2_scenes)} valid scenes processed")
 
-    try:
-        import stackstac
-        import planetary_computer as pc
+    if len(s2_scenes) < MIN_S2_SCENES:
+        print(f"    [SKIP] Only {len(s2_scenes)} valid S2 scenes after processing")
+        return None
 
-        items = catalog.search(
-            collections=[S1_COLLECTION],
-            bbox=bbox,
-            datetime=date_range,
-        ).item_collection()
+    # ── Sentinel-1 scenes ─────────────────────────────────────────────
+    s1_items = stac_search(S1_COLLECTION, bbox, date_range)
+    print(f"    [S1  ] {len(s1_items)} SAR items")
 
-        scene_count = len(items)
-        print(f"    [S1  ] {scene_count} SAR scenes")
+    s1_scenes = []
+    for item in s1_items:
+        result = process_s1_item(item, bbox)
+        if result:
+            s1_scenes.append(result)
+    print(f"    [S1  ] {len(s1_scenes)} valid SAR scenes")
 
-        if scene_count == 0:
-            return [None] * len(s2_times)
+    # ── Build composites ──────────────────────────────────────────────
+    composites = build_composites(s2_scenes)
+    if not composites:
+        print(f"    [SKIP] No valid composites built")
+        return None
 
-        stack = stackstac.stack(
-            items,
-            assets=["vv"],
-            resolution=S1_RESOLUTION,
-            bounds_latlon=bbox,
-            dtype="float32",
-        )
+    sar_aligned = align_sar_to_composites(s1_scenes, composites)
+    sar_coverage = sum(1 for v in sar_aligned if v is not None)
+    data_quality = "real_s2_s1" if sar_coverage >= len(composites) * 0.4 else "real_s2_only"
 
-        # Convert linear power to dB, take 8-day median, spatial mean
-        vv_linear = stack.sel(band="vv")
-        vv_db_da  = linear_to_db(vv_linear.values)
-        # Rebuild as DataArray for resampling
-        import xarray as xr
-        vv_db_xr = xr.DataArray(
-            vv_db_da,
-            coords=stack.sel(band="vv").coords,
-            dims=stack.sel(band="vv").dims,
-        )
-        vv_c = vv_db_xr.resample(time="8D").median().mean(dim=["x", "y"])
+    # ── Cut detection ─────────────────────────────────────────────────
+    enriched = detect_cuts(composites, sar_aligned, hay_type)
 
-        sar_times = [str(t)[:10] for t in vv_c.time.values]
-        sar_vals  = [float(v) if not np.isnan(v) else None for v in vv_c.values]
+    # ── Summary ───────────────────────────────────────────────────────
+    ndvi_vals      = [c["ndvi"] for c in enriched if c.get("ndvi") is not None]
+    ndre_vals      = [c["ndre"] for c in enriched if c.get("ndre") is not None]
+    confirmed_cuts = [c for c in enriched if c.get("cut_detected")]
+    high_conf_cuts = [c for c in confirmed_cuts if c.get("cut_confidence") == "high"]
+    current        = enriched[-1] if enriched else {}
 
-        # Align SAR to S2 times (nearest within ±4 days)
-        sar_lookup = {t: v for t, v in zip(sar_times, sar_vals)}
-        aligned = []
-        for s2t in s2_times:
-            s2_date = datetime.strptime(s2t, "%Y-%m-%d")
-            best    = None
-            best_d  = 999
-            for st, sv in sar_lookup.items():
-                d = abs((datetime.strptime(st, "%Y-%m-%d") - s2_date).days)
-                if d <= 4 and d < best_d and sv is not None:
-                    best   = sv
-                    best_d = d
-            aligned.append(best)
-
-        pct_coverage = sum(1 for v in aligned if v is not None) / len(aligned) * 100
-        print(f"    [S1  ] SAR coverage: {pct_coverage:.0f}% of S2 composites aligned")
-        return aligned
-
-    except Exception as e:
-        print(f"    [WARN] S1 fetch failed: {e} — proceeding without SAR")
-        return [None] * len(s2_times)
-
-
-def fetch_node(node: dict, year: int, catalog) -> Optional[dict]:
-    """
-    Fetch real Sentinel-2 + Sentinel-1 data for one hay node.
-    Returns None if insufficient real data exists — never fabricates.
-
-    Date range strategy: always pull from 90 days ago to today so that
-    early-season runs (e.g. May) still get real scenes from the current
-    growing season start rather than waiting for the full season window.
-    """
-    hay_type   = node["hay_type"]
-    region     = node["region"]
-    today      = datetime.now(timezone.utc)
-    m_start, m_end = HAY_SEASONS.get(hay_type, ("04", "10"))
-
-    # Use a rolling 90-day lookback ending today
-    # This ensures we always have recent scenes regardless of season position
-    lookback_start = (today - timedelta(days=90)).strftime("%Y-%m-%d")
-    lookback_end   = today.strftime("%Y-%m-%d")
-
-    # Also build the full-season range for context in the output
-    season_range = f"{year}-{m_start}-01/{year}-{m_end}-30"
-    date_range   = f"{lookback_start}/{lookback_end}"
-
-    print(f"\n  [{hay_type}/{region}]")
-    print(f"    Season: {season_range} | Fetching: {date_range} (90-day rolling)")
-
-    # ── Sentinel-2 (required) ─────────────────────────────────────────
-    s2 = fetch_sentinel2(catalog, node, date_range)
-    if s2 is None:
-        return None   # Not enough real data — skip entirely
-
-    # ── Sentinel-1 (optional but strongly preferred) ──────────────────
-    sar_vv_db = fetch_sentinel1(catalog, node, date_range, s2["times"])
-
-    sar_coverage = sum(1 for v in sar_vv_db if v is not None)
-    data_quality = (
-        "real_s2_s1"   if sar_coverage >= len(s2["times"]) * 0.5 else
-        "real_s2_only"
-    )
-
-    # ── Fused cut detection ───────────────────────────────────────────
-    composites = detect_cuts_sar_optical(
-        ndvi_vals  = s2["ndvi_vals"],
-        ndre_vals  = s2["ndre_vals"],
-        lswi_vals  = s2["lswi_vals"],
-        sar_vv_db  = sar_vv_db,
-        times      = s2["times"],
-        hay_type   = hay_type,
-    )
-
-    # ── Aggregate metrics ─────────────────────────────────────────────
-    ndvi_vals = s2["ndvi_vals"]
-    ndre_vals = s2["ndre_vals"]
-    confirmed_cuts = [c for c in composites if c["cut_detected"]]
-    high_conf_cuts = [c for c in confirmed_cuts if c["cut_confidence"] in ("high","medium")]
-
-    current   = composites[-1] if composites else {}
-    peak_ndvi = max(ndvi_vals) if ndvi_vals else None
-    peak_ndre = max(ndre_vals) if ndre_vals else None
-
-    # Mean SAR VV (excluding None)
-    sar_vals  = [v for v in sar_vv_db if v is not None]
-    mean_sar  = round(float(np.mean(sar_vals)), 2) if sar_vals else None
+    print(f"    [OK  ] {len(enriched)} composites | {len(confirmed_cuts)} cuts detected "
+          f"({len(high_conf_cuts)} high-conf) | quality={data_quality}")
 
     return {
         "hay_type":          hay_type,
@@ -388,66 +431,52 @@ def fetch_node(node: dict, year: int, catalog) -> Optional[dict]:
         "country":           node["country"],
         "grade":             node["grade"],
         "primary_use":       node["primary_use"],
-        "bbox":              node["bbox"],
+        "bbox":              bbox,
         "year":              year,
         "date_range":        date_range,
         "source":            "planetary_computer",
         "data_quality":      data_quality,
-        "s2_scene_count":    s2["scene_count"],
-        "s2_cloud_cover_pct": s2["cloud_cover_pct"],
-        "s1_scene_coverage_pct": round(sar_coverage / len(s2["times"]) * 100, 1) if s2["times"] else 0,
-        "composites":        composites,
-        "composite_count":   len(composites),
-        # Summary metrics
-        "peak_ndvi":         round(float(peak_ndvi), 4) if peak_ndvi else None,
-        "peak_ndre":         round(float(peak_ndre), 4) if peak_ndre else None,
+        "s2_scene_count":    len(s2_scenes),
+        "s1_scene_count":    len(s1_scenes),
+        "composite_count":   len(enriched),
+        "s1_coverage_pct":   round(sar_coverage / len(composites) * 100, 1) if composites else 0,
+        "composites":        enriched,
+        "peak_ndvi":         round(max(ndvi_vals), 4) if ndvi_vals else None,
+        "peak_ndre":         round(max(ndre_vals), 4) if ndre_vals else None,
         "current_ndvi":      current.get("ndvi"),
         "current_ndre":      current.get("ndre"),
         "current_velocity":  current.get("ndvi_velocity"),
         "current_status":    current.get("cutting_status"),
         "current_date":      current.get("date"),
-        "mean_sar_vv_db":    mean_sar,
-        # Cut detection summary
         "cuts_detected":     len(confirmed_cuts),
         "cuts_high_confidence": len(high_conf_cuts),
         "cut_dates":         [c["date"] for c in confirmed_cuts],
         "cut_dates_high_conf": [c["date"] for c in high_conf_cuts],
-        # Data provenance
         "data_notes": (
-            "SAR+optical fusion cut detection. "
-            "Cut confirmed when NDVI drops >0.20 AND Sentinel-1 VV increases >1.5dB simultaneously. "
-            "Drought/stress events show NDVI drop WITHOUT SAR increase — not classified as cuts. "
-            f"Data quality: {data_quality}."
+            f"Real Sentinel-2 L2A + Sentinel-1 RTC via Planetary Computer STAC. "
+            f"Cut detection: NDVI drop >{NDVI_CUT_DROP} AND SAR VV increase >{SAR_CUT_DB}dB. "
+            f"Data quality: {data_quality}. No synthetic data used."
         ),
     }
 
 
+# ── Run ───────────────────────────────────────────────────────────────
 def run():
+    # Hard check: rasterio required for COG reads
+    try:
+        import rasterio
+    except ImportError:
+        print("[FATAL] rasterio not installed. Run: pip install rasterio")
+        sys.exit(1)
+
     today    = datetime.now(timezone.utc)
     date_str = today.strftime("%Y-%m-%d")
     year     = today.year
 
-    print(f"\n[HAY PIPELINE] {date_str}")
-    print(f"[HAY PIPELINE] REAL DATA ONLY — no synthetic fallback")
-    print(f"[HAY PIPELINE] {len(HAY_NODES)} nodes | S2+S1 fusion | SAR cut detection\n")
+    print(f"\n[HAY PIPELINE] {date_str} — REAL DATA ONLY")
+    print(f"[HAY PIPELINE] {len(HAY_NODES)} nodes | Sentinel-2 + Sentinel-1 | No simulation\n")
 
-    # Check PC is available — hard fail if not
-    try:
-        import planetary_computer as pc
-        import pystac_client
-        import stackstac
-        import xarray
-    except ImportError as e:
-        print(f"[FATAL] Missing dependency: {e}")
-        print("[FATAL] Install: pip install pystac-client planetary-computer stackstac xarray")
-        sys.exit(1)
-
-    # Open PC catalog once, reuse for all nodes
-    catalog = pystac_client.Client.open(PC_STAC_URL, modifier=pc.sign_inplace)
-    print(f"[PC  ] Connected to Planetary Computer STAC\n")
-
-    results  = {"processed": 0, "skipped": 0, "errors": 0}
-    skipped  = []
+    processed, skipped_count, errors = 0, 0, 0
 
     for node in HAY_NODES:
         hay_type = node["hay_type"]
@@ -455,47 +484,29 @@ def run():
         fname    = f"{hay_type}_{region}_{date_str}.json"
 
         try:
-            data = fetch_node(node, year, catalog)
+            data = fetch_node(node, year)
 
             if data is None:
-                # Not enough real data — write a skip record, don't fabricate
                 skip_record = {
-                    "hay_type":    hay_type,
-                    "region":      region,
-                    "date":        date_str,
-                    "skipped":     True,
-                    "reason":      f"Insufficient Sentinel-2 scenes (need {MIN_S2_SCENES}+, cloud cover < {MAX_CLOUD_PCT}%)",
+                    "hay_type": hay_type, "region": region,
+                    "date": date_str, "skipped": True,
+                    "reason": f"Insufficient real data (need {MIN_S2_SCENES}+ S2 scenes, {LOOKBACK_DAYS}-day window, cloud < {MAX_CLOUD_PCT}%)",
                     "data_quality": "skipped",
                 }
                 (SKIP_DIR / fname).write_text(json.dumps(skip_record, indent=2))
-                print(f"  [SKIP] {fname} → written to skipped/")
-                skipped.append(f"{hay_type}/{region}")
-                results["skipped"] += 1
+                print(f"  [SKIP] {fname}")
+                skipped_count += 1
                 continue
 
             (NDVI_DIR / fname).write_text(json.dumps(data, indent=2))
-            status  = data.get("current_status", "unknown")
-            ndvi    = data.get("current_ndvi", "N/A")
-            quality = data.get("data_quality", "?")
-            cuts    = data.get("cuts_detected", 0)
-            hc_cuts = data.get("cuts_high_confidence", 0)
-            sar_pct = data.get("s1_scene_coverage_pct", 0)
-            print(f"  [OK  ] {fname}")
-            print(f"         status={status} NDVI={ndvi} quality={quality}")
-            print(f"         cuts={cuts} (high-conf={hc_cuts}) SAR={sar_pct:.0f}% coverage")
-            results["processed"] += 1
+            processed += 1
 
         except Exception as e:
             print(f"  [ERR ] {hay_type}/{region}: {e}")
-            results["errors"] += 1
+            errors += 1
 
-    print(f"\n[HAY PIPELINE] Complete")
-    print(f"  Processed: {results['processed']}")
-    print(f"  Skipped (insufficient data): {results['skipped']}")
-    print(f"  Errors: {results['errors']}")
-    if skipped:
-        print(f"  Skipped nodes: {skipped}")
-    print(f"  Outputs: {NDVI_DIR}\n")
+    print(f"\n[HAY PIPELINE] Done")
+    print(f"  Processed: {processed} | Skipped: {skipped_count} | Errors: {errors}\n")
 
 
 if __name__ == "__main__":
