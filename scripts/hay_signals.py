@@ -157,8 +157,14 @@ def run():
                 prompt = build_hay_signal_prompt(ndvi, prices),
                 system = HAY_SYSTEM,
             )
-            signal["generatedAt"] = today.isoformat()
-            signal["ndviSource"]  = ndvi.get("source", "unknown")
+            signal["generatedAt"]       = today.isoformat()
+            signal["ndviSource"]         = ndvi.get("source", "unknown")
+            signal["data_quality"]       = ndvi.get("data_quality", "unknown")
+            signal["current_date"]       = ndvi.get("current_date")          # last satellite visit
+            signal["s2_scene_count"]     = ndvi.get("s2_scene_count")
+            signal["s1_coverage_pct"]    = ndvi.get("s1_coverage_pct", 0)
+            signal["s2_items_found"]     = ndvi.get("s2_items_found")
+            signal["primary_use"]        = ndvi.get("primary_use", node.get("primary_use"))
             results.append(signal)
             status = signal.get("cutting_status", "?")
             conf   = signal.get("confidence", 0)
