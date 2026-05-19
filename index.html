@@ -1347,6 +1347,10 @@ function renderSnapshot(data) {
       <td>${((s.confidence||0)*100).toFixed(0)}%</td>
       <td>${s.spectral_velocity||'—'}</td>
       <td style="color:${fc};font-size:9px">🛰 ${s.current_date||'—'}</td>
+      <td style="font-size:9px;color:var(--t3)">${s.s2_scene_count!=null?s.s2_scene_count+'sc':'—'}</td>
+      <td style="font-size:9px;color:${s.data_quality==='real_s2_s1'?'var(--g0)':s.data_quality==='real_s2_only'?'var(--amber)':'var(--t3)'}">
+        ${s.data_quality||'—'}
+      </td>
     </tr>`;
   }).join('');
 
@@ -1361,7 +1365,8 @@ function renderSnapshot(data) {
     <div class="sh">Full Signal Table</div>
     <div class="lt-wrap"><table>
       <thead><tr><th>Hay Type</th><th>Region</th><th>Cut Status</th><th>Grade</th>
-        <th>Supply</th><th>Action</th><th>Conf</th><th>Velocity</th><th>Last S2 Visit</th></tr></thead>
+        <th>Supply</th><th>Action</th><th>Conf</th><th>Velocity</th>
+        <th>Last S2 Visit</th><th>Scenes</th><th>Quality</th></tr></thead>
       <tbody>${rows}</tbody>
     </table></div>`;
 }
