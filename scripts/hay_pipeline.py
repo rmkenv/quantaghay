@@ -90,14 +90,13 @@ def stac_search(collection: str, bbox: list, date_range: str,
 def select_best_scenes(items: list[dict], period_days: int = COMPOSITE_DAYS,
                        max_per_window: int = MAX_SCENES_NODE) -> list[dict]:
     """
-    Bin scenes into fixed windows. Within each window, keep only the
-    max_per_window scenes with lowest cloud cover. This reduces 1000+
-    scenes to ~15-30 actual COG reads while preserving temporal coverage.
+    Bin scenes into fixed windows. Within each window keep the lowest-cloud scenes.
+    For the 3 most recent windows, take up to 3 scenes (more chances to get one
+    that passes SCL cloud masking at the bbox level, even if global cloud % is high).
     """
     if not items:
         return []
 
-    # Parse dates
     dated = []
     for item in items:
         dt_str = item.get("properties", {}).get("datetime", "")[:10]
@@ -119,22 +118,22 @@ def select_best_scenes(items: list[dict], period_days: int = COMPOSITE_DAYS,
         cloud  = item.get("properties", {}).get("eo:cloud_cover", 100)
         bins[period].append((cloud, item))
 
+    all_periods = sorted(bins.keys())
+    recent_3    = set(all_periods[-3:]) if len(all_periods) >= 3 else set(all_periods)
+
     selected = []
-    for period_idx in sorted(bins.keys()):
-        # Sort by cloud cover ascending, take best N
-        window_items = sorted(bins[period_idx], key=lambda x: x[0])
-        for _, item in window_items[:max_per_window]:
+    for period_idx in all_periods:
+        # Give recent windows more candidates to maximise chance of valid bbox pixels
+        n = max_per_window + 1 if period_idx in recent_3 else max_per_window
+        for _, item in sorted(bins[period_idx], key=lambda x: x[0])[:n]:
             selected.append(item)
 
     return selected
 
 
 # ── COG chip reader ───────────────────────────────────────────────────
-def read_cog_mean(href: str, bbox: list, scale: float = 1.0) -> Optional[float]:
-    """
-    Read spatial mean of a bbox chip from a COG.
-    Signs URL via PC SDK if available. Returns scaled float or None.
-    """
+def read_cog_chip_raw(href: str, bbox: list) -> Optional[np.ndarray]:
+    """Read raw pixel array from a COG chip. Returns 2D array or None."""
     try:
         import rasterio
         from rasterio.windows import from_bounds
@@ -142,7 +141,6 @@ def read_cog_mean(href: str, bbox: list, scale: float = 1.0) -> Optional[float]:
         from rasterio.crs import CRS
         from rasterio.warp import transform_bounds
 
-        # Sign URL
         signed = href
         try:
             import planetary_computer as pc
@@ -151,45 +149,88 @@ def read_cog_mean(href: str, bbox: list, scale: float = 1.0) -> Optional[float]:
             pass
 
         with rasterio.open(signed) as src:
-            # Transform bbox to src CRS if needed
             src_bbox = bbox
             if src.crs and src.crs.to_epsg() != 4326:
-                src_bbox = transform_bounds(
-                    CRS.from_epsg(4326), src.crs, *bbox
-                )
+                src_bbox = transform_bounds(CRS.from_epsg(4326), src.crs, *bbox)
 
             window = from_bounds(*src_bbox, transform=src.transform)
-
             if window.width < 1 or window.height < 1:
                 return None
 
-            # Read at native resolution clipped to window
+            h = max(1, min(256, int(window.height)))
+            w = max(1, min(256, int(window.width)))
+
             data = src.read(
-                1,
-                window=window,
-                out_shape=(
-                    max(1, min(256, int(window.height))),
-                    max(1, min(256, int(window.width))),
-                ),
-                resampling=Resampling.bilinear,
+                1, window=window, out_shape=(h, w),
+                resampling=Resampling.nearest,
                 fill_value=0,
             )
-
-            arr = data.astype("float64")
-            # Mask nodata
             nodata = src.nodata if src.nodata is not None else 0
+            arr = data.astype("float64")
             arr[arr == nodata] = np.nan
-            # Mask sentinel-2 saturation/fill value
-            arr[arr > 20000] = np.nan
-
-            valid = arr[~np.isnan(arr)]
-            if len(valid) < MIN_VALID_PX:
-                return None
-
-            return float(np.nanmean(valid)) * scale
-
-    except Exception as e:
+            return arr
+    except Exception:
         return None
+
+
+def read_cog_mean(href: str, bbox: list, scale: float = 1.0,
+                  cloud_mask: Optional[np.ndarray] = None) -> Optional[float]:
+    """
+    Read spatial mean from a COG chip, optionally applying a cloud mask.
+    cloud_mask: boolean array where True = cloudy pixel to exclude.
+    """
+    arr = read_cog_chip_raw(href, bbox)
+    if arr is None:
+        return None
+
+    arr = arr * scale
+    arr[arr > 2.0] = np.nan   # S2 surface reflectance > 2.0 is invalid
+    arr[arr < 0]   = np.nan
+
+    if cloud_mask is not None:
+        # Resize mask to match arr shape if needed
+        if cloud_mask.shape != arr.shape:
+            # Resize mask using numpy nearest-neighbour (no PIL dependency)
+            zy = arr.shape[0] / cloud_mask.shape[0]
+            zx = arr.shape[1] / cloud_mask.shape[1]
+            yi = (np.arange(arr.shape[0]) / zy).astype(int).clip(0, cloud_mask.shape[0]-1)
+            xi = (np.arange(arr.shape[1]) / zx).astype(int).clip(0, cloud_mask.shape[1]-1)
+            mask_resized = cloud_mask[np.ix_(yi, xi)]
+            arr[mask_resized] = np.nan
+        else:
+            arr[cloud_mask] = np.nan
+
+    valid = arr[~np.isnan(arr)]
+    if len(valid) < MIN_VALID_PX:
+        return None
+    return float(np.nanmean(valid))
+
+
+def get_scl_mask(href_scl: str, bbox: list) -> Optional[np.ndarray]:
+    """
+    Read Sentinel-2 Scene Classification Layer (SCL) and return
+    a boolean cloud mask (True = cloudy/invalid pixel to exclude).
+
+    SCL values to exclude:
+      0  = No data
+      1  = Saturated / Defective
+      2  = Dark Area Pixels (topographic shadow)
+      3  = Cloud Shadows
+      8  = Cloud medium probability
+      9  = Cloud high probability
+      10 = Thin cirrus
+      11 = Snow / Ice (can look like high NDVI)
+    Keep: 4=Vegetation, 5=Bare Soils, 6=Water, 7=Unclassified
+    """
+    arr = read_cog_chip_raw(href_scl, bbox)
+    if arr is None:
+        return None
+    # Mask out bad pixels
+    cloud_vals = {0, 1, 2, 3, 8, 9, 10, 11}
+    mask = np.zeros(arr.shape, dtype=bool)
+    for v in cloud_vals:
+        mask |= (arr == v)
+    return mask
 
 
 # ── Sentinel-2 scene processor ────────────────────────────────────────
@@ -211,29 +252,44 @@ def process_s2_item(item: dict, bbox: list) -> Optional[dict]:
     href_b8  = get_href("B08",  ["nir-08",   "nir", "b08"])
     href_b05 = get_href("B05",  ["rededge",  "rededge1", "b05"])
     href_b11 = get_href("B11",  ["swir-16",  "swir1", "b11"])
+    href_scl = get_href("SCL",  ["scl", "scene-classification-map"])
 
     if not href_b4 or not href_b8:
         return None
 
-    b4 = read_cog_mean(href_b4, bbox, scale)
-    b8 = read_cog_mean(href_b8, bbox, scale)
+    # Get SCL cloud mask first — apply to all band reads
+    cloud_mask = get_scl_mask(href_scl, bbox) if href_scl else None
+    if cloud_mask is not None:
+        cloud_frac = cloud_mask.mean()
+        if cloud_frac > 0.90:
+            # >90% of bbox is cloud/invalid — skip scene entirely
+            return None
+
+    b4 = read_cog_mean(href_b4, bbox, scale, cloud_mask)
+    b8 = read_cog_mean(href_b8, bbox, scale, cloud_mask)
     if b4 is None or b8 is None:
         return None
 
-    b5  = read_cog_mean(href_b05, bbox, scale) if href_b05 else None
-    b11 = read_cog_mean(href_b11, bbox, scale) if href_b11 else None
+    b5  = read_cog_mean(href_b05, bbox, scale, cloud_mask) if href_b05 else None
+    b11 = read_cog_mean(href_b11, bbox, scale, cloud_mask) if href_b11 else None
 
     eps  = 1e-10
     ndvi = float(np.clip((b8 - b4) / (b8 + b4 + eps), -1, 1))
     ndre = float(np.clip((b8 - b5) / (b8 + b5 + eps), -1, 1)) if b5  is not None else None
     lswi = float(np.clip((b8 - b11)/ (b8 + b11+ eps), -1, 1)) if b11 is not None else None
 
+    # Sanity check: growing season NDVI should be positive
+    if ndvi < -0.1:
+        return None
+
     return {
-        "date":  date_str,
-        "ndvi":  round(ndvi, 4),
-        "ndre":  round(ndre, 4)  if ndre is not None else None,
-        "lswi":  round(lswi, 4) if lswi is not None else None,
-        "cloud": round(cloud, 1) if cloud is not None else None,
+        "date":         date_str,
+        "ndvi":         round(ndvi, 4),
+        "ndre":         round(ndre, 4)  if ndre is not None else None,
+        "lswi":         round(lswi, 4) if lswi is not None else None,
+        "cloud":        round(cloud, 1) if cloud is not None else None,
+        "scl_masked":   cloud_mask is not None,
+        "cloud_frac_bbox": round(float(cloud_mask.mean()), 3) if cloud_mask is not None else None,
     }
 
 
