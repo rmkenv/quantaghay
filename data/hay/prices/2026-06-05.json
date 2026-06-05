@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-06-05T11:10:04.187349+00:00",
+  "fetchedAt": "2026-06-05T12:19:12.781285+00:00",
   "date": "2026-06-05",
   "usda_benchmarks": {
     "Alfalfa": {
@@ -368,19 +368,19 @@
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 420.75,
-      "dayChg": -0.88,
-      "weekChg": -5.82,
+      "price": 422.0,
+      "dayChg": -0.59,
+      "weekChg": -5.54,
       "high52w": 477.0,
       "low52w": 371.5,
-      "pctOf52wH": 88.2,
+      "pctOf52wH": 88.5,
       "lastDate": "2026-06-05"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1127.5,
-      "dayChg": -0.18,
-      "weekChg": -4.99,
+      "price": 1128.25,
+      "dayChg": -0.11,
+      "weekChg": -4.93,
       "high52w": 1215.25,
       "low52w": 961.5,
       "pctOf52wH": 92.8,
@@ -433,6 +433,14 @@
       "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxPeVFYXzN1cWMtbnJzUWdPWkFscTVvMldSUHVqd0JfWlJlbVJYazhyM2l1TWZGU0ZkemxrOTh6WHJYX2FRdEdCbVg1eWhBWGVYNWFpVFRKOUFUVWRwaHdvNnNpNks5OGxtODI2MUpMVGJBTVF4UHVveUFKR2t4d2NDR3ZxQkowZXdyQnVKTUJyQ2NpU19XSnc?oc=5",
       "summary": "USDA AMS Hay Auction Market Data Bundle \u2013 May 27, 2026 | Premium Alfalfa & Grass Prices - News and Statistics &nbsp;&nbsp; IndexBox",
       "published": "2026-06-01T12:21:00+00:00"
+    },
+    {
+      "category": "hay_drought",
+      "source": "Google News: Hay Drought Supply",
+      "title": "'I've Never Seen Anything Like This': The Devastating Toll as Drought Grips the Western Plains - AgWeb",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxORUpJQWt3Y21hcTJ5T0tEQU1WR04yWC1RSmszaGJkd3E5X2ZGb1NldEJMNm9fcFh0Z3k4TkUzV0duTmpJWlBTRG5qcGRfaHdGUnRQcHRrSTl2NDBrVmVubDVfdlZQdFI3aVlESmpqR3V1cXNqLUVMdUh0a0lya0UzdHNTWWl2WkxGOTRMc3ZSOFRlcDRrYXVxUTU4N3pkSHBVZVdRcmxPWGhwb3ZVcUFUeEp3N3pWS3YwSWc?oc=5",
+      "summary": "'I've Never Seen Anything Like This': The Devastating Toll as Drought Grips the Western Plains &nbsp;&nbsp; AgWeb",
+      "published": "2026-06-02T14:08:00+00:00"
     }
   ],
   "sources": {
