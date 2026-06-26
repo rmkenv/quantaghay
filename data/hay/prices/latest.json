@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-06-26T10:43:02.795083+00:00",
+  "fetchedAt": "2026-06-26T11:46:37.314902+00:00",
   "date": "2026-06-26",
   "usda_benchmarks": {
     "Alfalfa": {
@@ -368,22 +368,22 @@
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 442.25,
-      "dayChg": 6.63,
-      "weekChg": 5.93,
+      "price": 442.5,
+      "dayChg": 6.69,
+      "weekChg": 5.99,
       "high52w": 477.0,
       "low52w": 371.5,
-      "pctOf52wH": 92.7,
+      "pctOf52wH": 92.8,
       "lastDate": "2026-06-26"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1149.75,
-      "dayChg": 1.97,
-      "weekChg": 2.4,
+      "price": 1150.5,
+      "dayChg": 2.04,
+      "weekChg": 2.47,
       "high52w": 1215.25,
       "low52w": 961.5,
-      "pctOf52wH": 94.6,
+      "pctOf52wH": 94.7,
       "lastDate": "2026-06-26"
     },
     "DBA": {
@@ -418,14 +418,6 @@
     }
   },
   "news_articles": [
-    {
-      "category": "hay_market",
-      "source": "Google News: Alfalfa Hay Market",
-      "title": "USDA Hay Auction Market Data Bundle: Arthur, Pipestone, Shipshewana Reports (June 2026) - News and Statistics - IndexBox",
-      "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxObFA1NENHekVuRmlzY2dwNjZZZ0EtOF90VnBjQnprQ1Y5VFNqcUYzRVBveXdWTVBiZFc2STdPazJTTHNnWGg5NzVXMW9MZE5YZG9XeUV4SUZ4NGZmeFFlSWdkekNtdmZXMmE4dUptR215Y1NKUHA5WjEtaE9xOUFHMEZBYTN6eGN0R1NMVXpOWUQ?oc=5",
-      "summary": "USDA Hay Auction Market Data Bundle: Arthur, Pipestone, Shipshewana Reports (June 2026) - News and Statistics &nbsp;&nbsp; IndexBox",
-      "published": "2026-06-23T19:31:00+00:00"
-    },
     {
       "category": "hay_market",
       "source": "Google News: Alfalfa Hay Market",
