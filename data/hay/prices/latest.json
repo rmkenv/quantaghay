@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-03T10:27:06.979774+00:00",
+  "fetchedAt": "2026-07-03T11:17:09.470513+00:00",
   "date": "2026-07-03",
   "usda_benchmarks": {
     "Alfalfa": {
@@ -394,6 +394,16 @@
       "high52w": 28.73,
       "low52w": 24.7282,
       "pctOf52wH": 93.1,
+      "lastDate": "2026-07-02"
+    },
+    "MOO": {
+      "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
+      "price": 80.91,
+      "dayChg": 2.43,
+      "weekChg": 2.04,
+      "high52w": 86.16,
+      "low52w": 67.6425,
+      "pctOf52wH": 93.9,
       "lastDate": "2026-07-02"
     },
     "CORN": {
