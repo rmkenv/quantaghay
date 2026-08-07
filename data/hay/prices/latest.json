@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-07T08:39:21.580597+00:00",
+  "fetchedAt": "2026-08-07T09:39:28.786494+00:00",
   "date": "2026-08-07",
   "usda_benchmarks": {
     "Alfalfa": {
@@ -368,19 +368,19 @@
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 463.75,
-      "dayChg": 5.64,
-      "weekChg": 5.22,
+      "price": 464.75,
+      "dayChg": 5.87,
+      "weekChg": 5.45,
       "high52w": 477.0,
       "low52w": 371.5,
-      "pctOf52wH": 97.2,
+      "pctOf52wH": 97.4,
       "lastDate": "2026-08-07"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1182.25,
-      "dayChg": 2.16,
-      "weekChg": 0.87,
+      "price": 1181.75,
+      "dayChg": 2.12,
+      "weekChg": 0.83,
       "high52w": 1248.0,
       "low52w": 966.75,
       "pctOf52wH": 94.7,
