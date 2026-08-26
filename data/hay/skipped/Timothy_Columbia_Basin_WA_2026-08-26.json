@@ -1,0 +1,8 @@
+{
+  "hay_type": "Timothy",
+  "region": "Columbia_Basin_WA",
+  "date": "2026-08-26",
+  "skipped": true,
+  "reason": "< 3 valid composites in 120-day window with cloud < 60%",
+  "data_quality": "skipped"
+}

@@ -1,0 +1,8 @@
+{
+  "hay_type": "Alfalfa",
+  "region": "San_Joaquin_Valley_CA",
+  "date": "2026-08-26",
+  "skipped": true,
+  "reason": "< 3 valid composites in 120-day window with cloud < 60%",
+  "data_quality": "skipped"
+}
