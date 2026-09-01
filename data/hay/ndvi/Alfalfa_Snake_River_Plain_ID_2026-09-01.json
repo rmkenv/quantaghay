@@ -15,7 +15,7 @@
   "date_range": "2026-05-04/2026-09-01",
   "source": "planetary_computer",
   "data_quality": "real_s2_s1",
-  "s2_items_found": 329,
+  "s2_items_found": 330,
   "s2_scenes_read": 33,
   "s1_scenes_read": 18,
   "composite_count": 14,
@@ -243,5 +243,5 @@
   "cuts_high_confidence": 0,
   "cut_dates": [],
   "cut_dates_high_conf": [],
-  "data_notes": "Real S2+S1 via PC STAC. Best-scene-per-window sampling: 33 of 329 S2 scenes read. Cut detection: NDVI drop >0.2 AND SAR VV >1.5dB. Quality: real_s2_s1. No synthetic data."
+  "data_notes": "Real S2+S1 via PC STAC. Best-scene-per-window sampling: 33 of 330 S2 scenes read. Cut detection: NDVI drop >0.2 AND SAR VV >1.5dB. Quality: real_s2_s1. No synthetic data."
 }
