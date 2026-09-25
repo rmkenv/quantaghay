@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-25T13:04:22.082370+00:00",
+  "fetchedAt": "2026-09-25T14:11:11.799851+00:00",
   "date": "2026-09-25",
   "usda_benchmarks": {
     "Alfalfa": {
@@ -348,39 +348,39 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 219.075,
-      "dayChg": -0.84,
-      "weekChg": 1.59,
+      "price": 220.925,
+      "dayChg": 0.84,
+      "weekChg": 2.32,
       "high52w": 258.475,
       "low52w": 207.0,
-      "pctOf52wH": 84.8,
-      "lastDate": "2026-09-24"
+      "pctOf52wH": 85.5,
+      "lastDate": "2026-09-25"
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 337.625,
-      "dayChg": 0.33,
-      "weekChg": 0.84,
+      "price": 330.625,
+      "dayChg": -2.07,
+      "weekChg": -0.88,
       "high52w": 380.175,
       "low52w": 304.975,
-      "pctOf52wH": 88.8,
-      "lastDate": "2026-09-24"
+      "pctOf52wH": 87.0,
+      "lastDate": "2026-09-25"
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 515.25,
-      "dayChg": -2.32,
-      "weekChg": -2.32,
+      "price": 517.25,
+      "dayChg": -1.94,
+      "weekChg": -1.94,
       "high52w": 543.0,
       "low52w": 402.0,
-      "pctOf52wH": 94.9,
+      "pctOf52wH": 95.3,
       "lastDate": "2026-09-25"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1300.0,
-      "dayChg": -1.33,
-      "weekChg": -0.27,
+      "price": 1299.5,
+      "dayChg": -1.37,
+      "weekChg": -0.31,
       "high52w": 1328.0,
       "low52w": 1001.75,
       "pctOf52wH": 97.9,
@@ -388,50 +388,50 @@
     },
     "DBA": {
       "description": "Invesco DB Agriculture ETF \u2014 broad ag exposure",
-      "price": 28.55,
-      "dayChg": 0.0,
-      "weekChg": 0.46,
+      "price": 28.2639,
+      "dayChg": -1.0,
+      "weekChg": 0.4,
       "high52w": 29.49,
       "low52w": 24.7861,
-      "pctOf52wH": 96.8,
-      "lastDate": "2026-09-24"
+      "pctOf52wH": 95.8,
+      "lastDate": "2026-09-25"
     },
     "MOO": {
       "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
-      "price": 83.34,
-      "dayChg": -1.15,
-      "weekChg": -3.35,
+      "price": 82.8254,
+      "dayChg": -0.62,
+      "weekChg": -2.14,
       "high52w": 88.85,
       "low52w": 67.6425,
-      "pctOf52wH": 93.8,
-      "lastDate": "2026-09-24"
+      "pctOf52wH": 93.2,
+      "lastDate": "2026-09-25"
     },
     "CORN": {
       "description": "Teucrium Corn Fund \u2014 feed grain competitor",
-      "price": 19.68,
-      "dayChg": -0.4,
-      "weekChg": -0.76,
+      "price": 19.415,
+      "dayChg": -1.35,
+      "weekChg": -1.45,
       "high52w": 20.29,
       "low52w": 16.47,
-      "pctOf52wH": 97.0,
-      "lastDate": "2026-09-24"
+      "pctOf52wH": 95.7,
+      "lastDate": "2026-09-25"
     }
   },
   "news_articles": [
     {
       "category": "hay_market",
       "source": "Google News: Alfalfa Hay Market",
-      "title": "USDA Hay Auction Reports Show Light Supply and Mixed Regional Pricing - News and Statistics - IndexBox",
+      "title": "USDA Hay Auction Reports Show Light Supply and Mixed Regional Pricing - News and Statistics - indexbox.io",
       "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOdzBYQ3Ayc1haUGJ5U1BmWFIzVTJVVWJVenIzWG1qbkdvSlRGNkZ4WkZaZmRETnpLLWVZcWFsa0xjblBXWjBXTmR4di1RTUR1WGY2cFU1Szh0SFY5MFJZZ0I3OWUxUmNSTDh4ZU52SU1UbFdQV0NwejgzcFRIZXQwM1hUMUJ6RE53LWNrdk93R2ZfUzcxc2xVUVgySURBWkVzekczRFAwN0dHSUlmSzR1a25yN2U?oc=5",
-      "summary": "USDA Hay Auction Reports Show Light Supply and Mixed Regional Pricing - News and Statistics &nbsp;&nbsp; IndexBox",
+      "summary": "USDA Hay Auction Reports Show Light Supply and Mixed Regional Pricing - News and Statistics &nbsp;&nbsp; indexbox.io",
       "published": "2026-09-23T20:50:37+00:00"
     },
     {
       "category": "hay_market",
       "source": "Google News: Alfalfa Hay Market",
-      "title": "USDA Hay Auction Reports September 2026: Light Supply, Firm Demand - News and Statistics - IndexBox",
+      "title": "USDA Hay Auction Reports September 2026: Light Supply, Firm Demand - News and Statistics - indexbox.io",
       "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxOblh4cGNMbDNvY1RjVDg1Q25MVkVWMHhlZjJaNEtHMTBGVjNMdE9COThUSnhiaGRXT3FLOXhzVXJzX0NwbWF4Wk14UmVOd1lUUnEtd21BbzhlSmhIeFZIWXlpYXVsQjJXc0ZSSnVOaFVsQVp1cFhCWU5PVWFlamhodER2eGtjNy1LRVNOWkxDZ05pUnROVDB3RkVJZEpMN2VpTFF2TUtic1Y4MEtVMERqNw?oc=5",
-      "summary": "USDA Hay Auction Reports September 2026: Light Supply, Firm Demand - News and Statistics &nbsp;&nbsp; IndexBox",
+      "summary": "USDA Hay Auction Reports September 2026: Light Supply, Firm Demand - News and Statistics &nbsp;&nbsp; indexbox.io",
       "published": "2026-09-22T17:42:51+00:00"
     },
     {
