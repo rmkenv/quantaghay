@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-10-20T13:02:50.770596+00:00",
-  "date": "2026-10-20",
+  "fetchedAt": "2026-10-21T13:01:40.295603+00:00",
+  "date": "2026-10-21",
   "usda_benchmarks": {
     "Alfalfa": {
       "Supreme": {
@@ -348,73 +348,73 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 227.5,
-      "dayChg": -0.02,
-      "weekChg": 1.22,
+      "price": 229.45,
+      "dayChg": 0.86,
+      "weekChg": 2.15,
       "high52w": 258.475,
       "low52w": 207.0,
-      "pctOf52wH": 88.0,
-      "lastDate": "2026-10-19"
+      "pctOf52wH": 88.8,
+      "lastDate": "2026-10-20"
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 344.425,
-      "dayChg": 0.23,
-      "weekChg": 0.28,
+      "price": 345.9,
+      "dayChg": 0.43,
+      "weekChg": 0.82,
       "high52w": 375.875,
       "low52w": 304.975,
-      "pctOf52wH": 91.6,
-      "lastDate": "2026-10-19"
+      "pctOf52wH": 92.0,
+      "lastDate": "2026-10-20"
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 467.75,
-      "dayChg": 0.16,
-      "weekChg": -3.11,
+      "price": 456.25,
+      "dayChg": -1.24,
+      "weekChg": -5.1,
       "high52w": 543.0,
       "low52w": 402.0,
-      "pctOf52wH": 86.1,
-      "lastDate": "2026-10-20"
+      "pctOf52wH": 84.0,
+      "lastDate": "2026-10-21"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1257.5,
-      "dayChg": 0.32,
-      "weekChg": -2.04,
+      "price": 1240.5,
+      "dayChg": -0.62,
+      "weekChg": -2.88,
       "high52w": 1328.0,
       "low52w": 1023.25,
-      "pctOf52wH": 94.7,
-      "lastDate": "2026-10-20"
+      "pctOf52wH": 93.4,
+      "lastDate": "2026-10-21"
     },
     "DBA": {
       "description": "Invesco DB Agriculture ETF \u2014 broad ag exposure",
-      "price": 28.2,
+      "price": 28.17,
       "dayChg": -0.11,
-      "weekChg": -0.84,
+      "weekChg": -0.91,
       "high52w": 29.49,
       "low52w": 24.7861,
-      "pctOf52wH": 95.6,
-      "lastDate": "2026-10-19"
+      "pctOf52wH": 95.5,
+      "lastDate": "2026-10-20"
     },
     "MOO": {
       "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
-      "price": 80.69,
-      "dayChg": -1.34,
-      "weekChg": -0.17,
+      "price": 81.12,
+      "dayChg": 0.53,
+      "weekChg": -1.04,
       "high52w": 88.85,
       "low52w": 67.6425,
-      "pctOf52wH": 90.8,
-      "lastDate": "2026-10-19"
+      "pctOf52wH": 91.3,
+      "lastDate": "2026-10-20"
     },
     "CORN": {
       "description": "Teucrium Corn Fund \u2014 feed grain competitor",
-      "price": 18.01,
-      "dayChg": -0.99,
-      "weekChg": -2.44,
+      "price": 17.86,
+      "dayChg": -0.83,
+      "weekChg": -3.35,
       "high52w": 20.29,
       "low52w": 16.47,
-      "pctOf52wH": 88.8,
-      "lastDate": "2026-10-19"
+      "pctOf52wH": 88.0,
+      "lastDate": "2026-10-20"
     }
   },
   "news_articles": [
