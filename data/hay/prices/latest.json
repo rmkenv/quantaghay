@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-10-21T13:01:40.295603+00:00",
-  "date": "2026-10-21",
+  "fetchedAt": "2026-10-22T13:10:56.520111+00:00",
+  "date": "2026-10-22",
   "usda_benchmarks": {
     "Alfalfa": {
       "Supreme": {
@@ -348,73 +348,73 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 229.45,
-      "dayChg": 0.86,
-      "weekChg": 2.15,
+      "price": 230.425,
+      "dayChg": 0.42,
+      "weekChg": 2.91,
       "high52w": 258.475,
       "low52w": 207.0,
-      "pctOf52wH": 88.8,
-      "lastDate": "2026-10-20"
+      "pctOf52wH": 89.1,
+      "lastDate": "2026-10-21"
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 345.9,
-      "dayChg": 0.43,
-      "weekChg": 0.82,
+      "price": 347.825,
+      "dayChg": 0.56,
+      "weekChg": 2.02,
       "high52w": 375.875,
       "low52w": 304.975,
-      "pctOf52wH": 92.0,
-      "lastDate": "2026-10-20"
+      "pctOf52wH": 92.5,
+      "lastDate": "2026-10-21"
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 456.25,
-      "dayChg": -1.24,
-      "weekChg": -5.1,
+      "price": 465.0,
+      "dayChg": 0.38,
+      "weekChg": -2.72,
       "high52w": 543.0,
       "low52w": 402.0,
-      "pctOf52wH": 84.0,
-      "lastDate": "2026-10-21"
+      "pctOf52wH": 85.6,
+      "lastDate": "2026-10-22"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1240.5,
-      "dayChg": -0.62,
-      "weekChg": -2.88,
+      "price": 1260.0,
+      "dayChg": 1.18,
+      "weekChg": -0.24,
       "high52w": 1328.0,
       "low52w": 1023.25,
-      "pctOf52wH": 93.4,
-      "lastDate": "2026-10-21"
+      "pctOf52wH": 94.9,
+      "lastDate": "2026-10-22"
     },
     "DBA": {
       "description": "Invesco DB Agriculture ETF \u2014 broad ag exposure",
-      "price": 28.17,
-      "dayChg": -0.11,
-      "weekChg": -0.91,
+      "price": 28.12,
+      "dayChg": -0.18,
+      "weekChg": -0.5,
       "high52w": 29.49,
       "low52w": 24.7861,
-      "pctOf52wH": 95.5,
-      "lastDate": "2026-10-20"
+      "pctOf52wH": 95.4,
+      "lastDate": "2026-10-21"
     },
     "MOO": {
       "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
-      "price": 81.12,
-      "dayChg": 0.53,
-      "weekChg": -1.04,
+      "price": 81.31,
+      "dayChg": 0.23,
+      "weekChg": -1.06,
       "high52w": 88.85,
       "low52w": 67.6425,
-      "pctOf52wH": 91.3,
-      "lastDate": "2026-10-20"
+      "pctOf52wH": 91.5,
+      "lastDate": "2026-10-21"
     },
     "CORN": {
       "description": "Teucrium Corn Fund \u2014 feed grain competitor",
-      "price": 17.86,
-      "dayChg": -0.83,
-      "weekChg": -3.35,
+      "price": 17.98,
+      "dayChg": 0.67,
+      "weekChg": -2.39,
       "high52w": 20.29,
       "low52w": 16.47,
-      "pctOf52wH": 88.0,
-      "lastDate": "2026-10-20"
+      "pctOf52wH": 88.6,
+      "lastDate": "2026-10-21"
     }
   },
   "news_articles": [
@@ -433,14 +433,6 @@
       "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQRDNqb2pyMkpFVS1vVEF1Q245MzRVV0VUdnoxZlZieXNTTHNVSkRSRVhhbmlDWTB6N21YaEJFNWZya2YwTTBCLS1hWUtzSjhWblItQXpzUUJBaDlVV0xvUW9wMy11ai1BYkRDTTB1R3hMRm9KNEo5R1RCZmpNeUlwdGkzZEFBOVRFVzhIOHZGTlJ1TUI2U0lnN1otUFJ0azRjSTFXVg?oc=5",
       "summary": "USDA Hay Auction Report: Mixed Prices in IL, MN, IN, IA - News and Statistics &nbsp;&nbsp; IndexBox",
       "published": "2026-10-15T15:40:46+00:00"
-    },
-    {
-      "category": "hay_market",
-      "source": "Google News: Alfalfa Hay Market",
-      "title": "USDA Hay Auction Reports: Mixed Regional Hay Prices - News and Statistics - IndexBox",
-      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxNbXdGUWREbnM0N3lqam85ZTlWbkRTd2pybDByQWNfM0o1YWhpRUxRelhjaUFKb2RpNHZvcHFIZUZYMzg5ZGVidFRhNTZvc2IxLTNIYnVUU0pGRkkyeVBYZkxYd3l1VGE5bDFBeW9wSkF3TkdiZGNUOVVQZ1hOaW9kc1RJb1N3cjRDUnZJTg?oc=5",
-      "summary": "USDA Hay Auction Reports: Mixed Regional Hay Prices - News and Statistics &nbsp;&nbsp; IndexBox",
-      "published": "2026-10-13T17:51:39+00:00"
     }
   ],
   "sources": {
