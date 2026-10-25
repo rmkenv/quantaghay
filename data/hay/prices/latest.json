@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-10-24T12:11:21.015626+00:00",
-  "date": "2026-10-24",
+  "fetchedAt": "2026-10-25T12:51:38.913905+00:00",
+  "date": "2026-10-25",
   "usda_benchmarks": {
     "Alfalfa": {
       "Supreme": {
@@ -348,22 +348,22 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 229.875,
-      "dayChg": 0.05,
-      "weekChg": 1.02,
+      "price": 231.2,
+      "dayChg": 0.63,
+      "weekChg": 1.6,
       "high52w": 258.475,
       "low52w": 207.0,
-      "pctOf52wH": 88.9,
+      "pctOf52wH": 89.4,
       "lastDate": "2026-10-23"
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 348.325,
-      "dayChg": 0.64,
-      "weekChg": 1.37,
+      "price": 345.35,
+      "dayChg": -0.22,
+      "weekChg": 0.5,
       "high52w": 375.875,
       "low52w": 304.975,
-      "pctOf52wH": 92.7,
+      "pctOf52wH": 91.9,
       "lastDate": "2026-10-23"
     },
     "ZC=F": {
