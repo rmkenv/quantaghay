@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-10-29T14:24:22.446167+00:00",
-  "date": "2026-10-29",
+  "fetchedAt": "2026-10-30T14:17:10.730298+00:00",
+  "date": "2026-10-30",
   "usda_benchmarks": {
     "Alfalfa": {
       "Supreme": {
@@ -348,63 +348,73 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 226.3,
-      "dayChg": -0.47,
-      "weekChg": -1.5,
+      "price": 222.675,
+      "dayChg": -2.02,
+      "weekChg": -3.13,
       "high52w": 258.475,
       "low52w": 207.0,
-      "pctOf52wH": 87.6,
-      "lastDate": "2026-10-29"
+      "pctOf52wH": 86.1,
+      "lastDate": "2026-10-30"
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 346.575,
-      "dayChg": -1.38,
-      "weekChg": 0.14,
+      "price": 339.75,
+      "dayChg": -3.23,
+      "weekChg": -2.46,
       "high52w": 375.875,
       "low52w": 304.975,
-      "pctOf52wH": 92.2,
-      "lastDate": "2026-10-29"
+      "pctOf52wH": 90.4,
+      "lastDate": "2026-10-30"
+    },
+    "ZC=F": {
+      "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
+      "price": 449.0,
+      "dayChg": -0.5,
+      "weekChg": -1.54,
+      "high52w": 543.0,
+      "low52w": 402.0,
+      "pctOf52wH": 82.7,
+      "lastDate": "2026-10-30"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1229.75,
-      "dayChg": 0.43,
-      "weekChg": -1.86,
+      "price": 1239.5,
+      "dayChg": 1.62,
+      "weekChg": -1.35,
       "high52w": 1328.0,
       "low52w": 1023.25,
-      "pctOf52wH": 92.6,
-      "lastDate": "2026-10-29"
+      "pctOf52wH": 93.3,
+      "lastDate": "2026-10-30"
     },
     "DBA": {
       "description": "Invesco DB Agriculture ETF \u2014 broad ag exposure",
-      "price": 27.095,
-      "dayChg": -0.06,
-      "weekChg": -2.95,
+      "price": 26.97,
+      "dayChg": -0.74,
+      "weekChg": -3.23,
       "high52w": 29.49,
       "low52w": 24.7861,
-      "pctOf52wH": 91.9,
-      "lastDate": "2026-10-29"
+      "pctOf52wH": 91.5,
+      "lastDate": "2026-10-30"
     },
     "MOO": {
       "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
-      "price": 80.715,
-      "dayChg": 0.57,
-      "weekChg": -0.67,
+      "price": 81.715,
+      "dayChg": 1.23,
+      "weekChg": 0.03,
       "high52w": 88.85,
       "low52w": 67.6425,
-      "pctOf52wH": 90.8,
-      "lastDate": "2026-10-29"
+      "pctOf52wH": 92.0,
+      "lastDate": "2026-10-30"
     },
     "CORN": {
       "description": "Teucrium Corn Fund \u2014 feed grain competitor",
-      "price": 17.3701,
-      "dayChg": -0.29,
-      "weekChg": -2.31,
+      "price": 17.45,
+      "dayChg": 0.06,
+      "weekChg": -1.3,
       "high52w": 20.29,
       "low52w": 16.47,
-      "pctOf52wH": 85.6,
-      "lastDate": "2026-10-29"
+      "pctOf52wH": 86.0,
+      "lastDate": "2026-10-30"
     }
   },
   "news_articles": [
@@ -425,20 +435,20 @@
       "published": "2026-10-26T19:40:33+00:00"
     },
     {
-      "category": "hay_market",
-      "source": "Google News: Alfalfa Hay Market",
-      "title": "Area Hay Prices - High Plains Journal",
-      "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTE85TDd4ekdZd0JjZUtHd09zRGRXUVR2Qi13c2FCYzdvSFpEOHB6bGY2VmM3Tl9ISlljbHBNUHl5ZHJZQ3Q2Sm01LVkyUW56bU1TZUNib1lvbnhKZ2xaQnc?oc=5",
-      "summary": "Area Hay Prices &nbsp;&nbsp; High Plains Journal",
-      "published": "2026-10-22T18:29:22+00:00"
-    },
-    {
       "category": "hay_drought",
       "source": "Google News: Hay Drought Supply",
       "title": "High Freight Costs Complicate U.S. Hay Movement Nationwide - RFD-TV",
       "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNV1d2MmdNbDRnNHB6YkJfSHJsMGZlT0F1Rm9ybmtjWjJ3cFlJUXVCelNrc1NtMk5mNzZGWklZSXhVNXVNdV9fQ2Q3WUJGaU5yMEFyOWNycEVMeEtRWWEtcmpuemVMR1IwWEhLSWdrU2RaSWJPaW9HaW83QXFMT2taQ3Z1Vk4tZw?oc=5",
       "summary": "High Freight Costs Complicate U.S. Hay Movement Nationwide &nbsp;&nbsp; RFD-TV",
       "published": "2026-10-26T17:34:12+00:00"
+    },
+    {
+      "category": "hay_drought",
+      "source": "Google News: Hay Drought Supply",
+      "title": "Feed project to help livestock farmers prepare for drought - Barbados Today",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQdGpIMDRMX2ZxYTVaSHZhTVozbGJqQWFTUnpRdlp3c1J3aldKSlNyaVVacG40UnpDY0RCamlLNVI3WWZhd0tzaTdUblE1X1BZLTZWS3ZQNkFoY0tWTkxSOUZxOWJJX05PZEhXV0c1RlRlVWdXc0hYMHFJOS0tQWdHNnBJTjlnZFdfNTBpOGozdl9ndlhYcjZLM21NSdIBoAFBVV95cUxPM1FnWEtGQ0dQREZsN2h0NUlKczBYWEVFTGhXZUczNzgzYnE4SHk1U2ZCLTdTUXVzYzhjdFFwSTJCSW1veHhtSTctSExHNUpKcU9GN1RRT1FhTDJlb1VTdVd3Y1oyNVlIbUFfeWhUQkZhdWRkOXZjajEwanpwcmJ5QWxsTEFQSEtyWXNjNnZXVDFFdUVGZFh2UmZlMHpKYVZn?oc=5",
+      "summary": "Feed project to help livestock farmers prepare for drought &nbsp;&nbsp; Barbados Today",
+      "published": "2026-10-30T00:30:19+00:00"
     }
   ],
   "sources": {
