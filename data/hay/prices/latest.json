@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-11-01T15:53:07.542239+00:00",
-  "date": "2026-11-01",
+  "fetchedAt": "2026-11-02T17:19:35.753392+00:00",
+  "date": "2026-11-02",
   "usda_benchmarks": {
     "Alfalfa": {
       "Supreme": {
@@ -348,73 +348,63 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 220.95,
-      "dayChg": -2.78,
-      "weekChg": -3.88,
+      "price": 219.8,
+      "dayChg": -1.87,
+      "weekChg": -4.42,
       "high52w": 258.475,
       "low52w": 207.0,
-      "pctOf52wH": 85.5,
-      "lastDate": "2026-10-30"
+      "pctOf52wH": 85.0,
+      "lastDate": "2026-11-02"
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 331.775,
-      "dayChg": -5.5,
-      "weekChg": -4.75,
+      "price": 331.025,
+      "dayChg": -2.0,
+      "weekChg": -5.39,
       "high52w": 375.875,
       "low52w": 304.975,
-      "pctOf52wH": 88.3,
-      "lastDate": "2026-10-30"
+      "pctOf52wH": 88.1,
+      "lastDate": "2026-11-02"
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 447.75,
-      "dayChg": -0.78,
-      "weekChg": -1.81,
+      "price": 447.25,
+      "dayChg": -0.11,
+      "weekChg": -1.7,
       "high52w": 543.0,
       "low52w": 402.0,
-      "pctOf52wH": 82.5,
-      "lastDate": "2026-10-30"
+      "pctOf52wH": 82.4,
+      "lastDate": "2026-11-02"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1234.25,
-      "dayChg": 1.19,
-      "weekChg": -1.77,
+      "price": 1217.75,
+      "dayChg": -0.37,
+      "weekChg": -1.89,
       "high52w": 1328.0,
       "low52w": 1023.25,
-      "pctOf52wH": 92.9,
-      "lastDate": "2026-10-30"
-    },
-    "DBA": {
-      "description": "Invesco DB Agriculture ETF \u2014 broad ag exposure",
-      "price": 26.89,
-      "dayChg": -1.03,
-      "weekChg": -3.52,
-      "high52w": 29.49,
-      "low52w": 24.7861,
-      "pctOf52wH": 91.2,
-      "lastDate": "2026-10-30"
+      "pctOf52wH": 91.7,
+      "lastDate": "2026-11-02"
     },
     "MOO": {
       "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
-      "price": 81.98,
-      "dayChg": 1.56,
-      "weekChg": 0.36,
+      "price": 82.19,
+      "dayChg": 0.26,
+      "weekChg": 1.17,
       "high52w": 88.85,
       "low52w": 67.6425,
-      "pctOf52wH": 92.3,
-      "lastDate": "2026-10-30"
+      "pctOf52wH": 92.5,
+      "lastDate": "2026-11-02"
     },
     "CORN": {
       "description": "Teucrium Corn Fund \u2014 feed grain competitor",
-      "price": 17.34,
-      "dayChg": -0.57,
-      "weekChg": -1.92,
+      "price": 17.4,
+      "dayChg": 0.35,
+      "weekChg": -1.3,
       "high52w": 20.29,
       "low52w": 16.47,
-      "pctOf52wH": 85.5,
-      "lastDate": "2026-10-30"
+      "pctOf52wH": 85.8,
+      "lastDate": "2026-11-02"
     }
   },
   "news_articles": [
@@ -441,6 +431,14 @@
       "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOTGRvWDd2OWxVZTdGV1BZMkpuelBzbUhlYnFuOEM0TVlHWWloaHZ0Y2RIS1JpcjMwRElwVmFLbldWel9HMXZ5MkxjdDlpZ3EwejJ0R0duNEN6XzdoRVl6dHRrQTM2bnE2RlYzUEFsNUhkZ0hBcEJnbzZ4enh6UGNxb1lVUWkwUWtkam9EanhxV1drYURMb0ZXMW9lbnZPaVFjaDlzWmtvb01QZEV3YzMw?oc=5",
       "summary": "USDA Hay Auction Reports: Mixed Pricing in Illinois, Minnesota, Indiana - News and Statistics &nbsp;&nbsp; IndexBox",
       "published": "2026-10-26T19:40:33+00:00"
+    },
+    {
+      "category": "hay_drought",
+      "source": "Google News: Hay Drought Supply",
+      "title": "High Freight Costs Complicate U.S. Hay Movement Nationwide - RFD-TV",
+      "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxNV1d2MmdNbDRnNHB6YkJfSHJsMGZlT0F1Rm9ybmtjWjJ3cFlJUXVCelNrc1NtMk5mNzZGWklZSXhVNXVNdV9fQ2Q3WUJGaU5yMEFyOWNycEVMeEtRWWEtcmpuemVMR1IwWEhLSWdrU2RaSWJPaW9HaW83QXFMT2taQ3Z1Vk4tZw?oc=5",
+      "summary": "High Freight Costs Complicate U.S. Hay Movement Nationwide &nbsp;&nbsp; RFD-TV",
+      "published": "2026-10-26T17:34:12+00:00"
     }
   ],
   "sources": {
