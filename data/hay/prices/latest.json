@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-11-05T15:35:57.551471+00:00",
-  "date": "2026-11-05",
+  "fetchedAt": "2026-11-06T15:19:38.866648+00:00",
+  "date": "2026-11-06",
   "usda_benchmarks": {
     "Alfalfa": {
       "Supreme": {
@@ -348,83 +348,83 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 216.425,
-      "dayChg": -0.72,
-      "weekChg": -4.77,
+      "price": 212.1,
+      "dayChg": -1.07,
+      "weekChg": -5.31,
       "high52w": 258.475,
       "low52w": 207.0,
-      "pctOf52wH": 83.7,
-      "lastDate": "2026-11-05"
+      "pctOf52wH": 82.1,
+      "lastDate": "2026-11-06"
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 330.375,
-      "dayChg": -0.5,
-      "weekChg": -5.9,
+      "price": 320.175,
+      "dayChg": -1.5,
+      "weekChg": -5.21,
       "high52w": 375.875,
       "low52w": 304.975,
-      "pctOf52wH": 87.9,
-      "lastDate": "2026-11-05"
+      "pctOf52wH": 85.2,
+      "lastDate": "2026-11-06"
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 442.75,
-      "dayChg": -0.34,
-      "weekChg": -1.88,
+      "price": 440.5,
+      "dayChg": 0.11,
+      "weekChg": -1.62,
       "high52w": 543.0,
       "low52w": 402.0,
-      "pctOf52wH": 81.5,
-      "lastDate": "2026-11-05"
+      "pctOf52wH": 81.1,
+      "lastDate": "2026-11-06"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1202.75,
-      "dayChg": 0.8,
-      "weekChg": -1.39,
+      "price": 1188.25,
+      "dayChg": 0.61,
+      "weekChg": -2.78,
       "high52w": 1328.0,
       "low52w": 1023.25,
-      "pctOf52wH": 90.6,
-      "lastDate": "2026-11-05"
+      "pctOf52wH": 89.5,
+      "lastDate": "2026-11-06"
     },
     "DBA": {
       "description": "Invesco DB Agriculture ETF \u2014 broad ag exposure",
-      "price": 26.3298,
-      "dayChg": -0.45,
-      "weekChg": -3.09,
+      "price": 26.085,
+      "dayChg": -0.29,
+      "weekChg": -2.99,
       "high52w": 29.49,
       "low52w": 24.7861,
-      "pctOf52wH": 89.3,
-      "lastDate": "2026-11-05"
+      "pctOf52wH": 88.5,
+      "lastDate": "2026-11-06"
     },
     "MOO": {
       "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
-      "price": 83.98,
-      "dayChg": 0.32,
-      "weekChg": 4.04,
+      "price": 82.3,
+      "dayChg": -0.39,
+      "weekChg": 0.39,
       "high52w": 88.85,
       "low52w": 67.6425,
-      "pctOf52wH": 94.5,
-      "lastDate": "2026-11-05"
+      "pctOf52wH": 92.6,
+      "lastDate": "2026-11-06"
     },
     "CORN": {
       "description": "Teucrium Corn Fund \u2014 feed grain competitor",
-      "price": 17.25,
-      "dayChg": -0.86,
-      "weekChg": -1.09,
+      "price": 17.16,
+      "dayChg": 0.06,
+      "weekChg": -1.04,
       "high52w": 20.29,
       "low52w": 16.47,
-      "pctOf52wH": 85.0,
-      "lastDate": "2026-11-05"
+      "pctOf52wH": 84.6,
+      "lastDate": "2026-11-06"
     }
   },
   "news_articles": [
     {
       "category": "hay_market",
       "source": "Google News: Alfalfa Hay Market",
-      "title": "USDA Hay Auction Prices Mixed Across Arthur, Pipestone and Shipshewana - News and Statistics - IndexBox",
-      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNWnhFN3VSN1ZXY0p4SnRqWHhmcF9qckxyNFdRbjVFTEdqLWpmRFkyNTl2bFVQdnNwYWZxRU9HMEE2cGlUM0ltdmJpQWVIM2lPNG9jQnBpQnlJSEd5SEQ5QlNaQjY5dG9iekRPVV95UmJ2emNJd0xncGFYcmhFUzI5NFV0RHBnYXJ1QWJ0WVZhSWR5aFVYUVFOZk9sMUVlekVSbWkzdHhCeWx6eG5qRFRTRV9ZeXJPQUFLVm9pSnNpM0U?oc=5",
-      "summary": "USDA Hay Auction Prices Mixed Across Arthur, Pipestone and Shipshewana - News and Statistics &nbsp;&nbsp; IndexBox",
-      "published": "2026-11-04T21:31:02+00:00"
+      "title": "Current hay prices - High Plains Journal",
+      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1qMTdjczlSU0JYZ2V3c25MODJKUEc0SFVVNWp0a0c5SWNkUGwtSUVialBpTnF3N1Z6UWZaX3NpaHhNSTdoZXdveGZ4RVpzaHJoMDdCc1F3?oc=5",
+      "summary": "Current hay prices &nbsp;&nbsp; High Plains Journal",
+      "published": "2026-11-05T16:58:48+00:00"
     }
   ],
   "sources": {
