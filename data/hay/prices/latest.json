@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-11-07T14:06:15.108328+00:00",
-  "date": "2026-11-07",
+  "fetchedAt": "2026-11-08T14:24:11.414723+00:00",
+  "date": "2026-11-08",
   "usda_benchmarks": {
     "Alfalfa": {
       "Supreme": {
@@ -358,12 +358,12 @@
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 322.325,
-      "dayChg": -0.84,
-      "weekChg": -4.57,
+      "price": 318.375,
+      "dayChg": -2.05,
+      "weekChg": -5.74,
       "high52w": 375.875,
       "low52w": 304.975,
-      "pctOf52wH": 85.8,
+      "pctOf52wH": 84.7,
       "lastDate": "2026-11-06"
     },
     "ZC=F": {
@@ -378,12 +378,12 @@
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1189.0,
-      "dayChg": 0.68,
-      "weekChg": -2.72,
+      "price": 1193.75,
+      "dayChg": 1.08,
+      "weekChg": -2.33,
       "high52w": 1328.0,
       "low52w": 1023.25,
-      "pctOf52wH": 89.5,
+      "pctOf52wH": 89.9,
       "lastDate": "2026-11-06"
     },
     "DBA": {
@@ -417,16 +417,7 @@
       "lastDate": "2026-11-06"
     }
   },
-  "news_articles": [
-    {
-      "category": "hay_market",
-      "source": "Google News: Alfalfa Hay Market",
-      "title": "Current hay prices - High Plains Journal",
-      "url": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1qMTdjczlSU0JYZ2V3c25MODJKUEc0SFVVNWp0a0c5SWNkUGwtSUVialBpTnF3N1Z6UWZaX3NpaHhNSTdoZXdveGZ4RVpzaHJoMDdCc1F3?oc=5",
-      "summary": "Current hay prices &nbsp;&nbsp; High Plains Journal",
-      "published": "2026-11-05T16:58:48+00:00"
-    }
-  ],
+  "news_articles": [],
   "sources": {
     "usda_ams": "https://www.ams.usda.gov/market-news/hay",
     "usda_reports": {
