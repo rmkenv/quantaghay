@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-11-10T15:52:22.993527+00:00",
-  "date": "2026-11-10",
+  "fetchedAt": "2026-11-11T15:27:39.728231+00:00",
+  "date": "2026-11-11",
   "usda_benchmarks": {
     "Alfalfa": {
       "Supreme": {
@@ -348,76 +348,92 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 217.15,
-      "dayChg": 0.44,
-      "weekChg": -0.46,
+      "price": 219.375,
+      "dayChg": 0.08,
+      "weekChg": 0.63,
       "high52w": 258.475,
       "low52w": 207.0,
-      "pctOf52wH": 84.0,
-      "lastDate": "2026-11-10"
+      "pctOf52wH": 84.9,
+      "lastDate": "2026-11-11"
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 328.475,
-      "dayChg": 0.04,
-      "weekChg": -1.81,
+      "price": 333.125,
+      "dayChg": 0.84,
+      "weekChg": 0.33,
       "high52w": 375.875,
       "low52w": 304.975,
-      "pctOf52wH": 87.4,
-      "lastDate": "2026-11-10"
+      "pctOf52wH": 88.6,
+      "lastDate": "2026-11-11"
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 441.25,
-      "dayChg": 0.46,
-      "weekChg": -0.28,
+      "price": 445.25,
+      "dayChg": -0.84,
+      "weekChg": 0.23,
       "high52w": 543.0,
       "low52w": 402.0,
-      "pctOf52wH": 81.3,
-      "lastDate": "2026-11-10"
+      "pctOf52wH": 82.0,
+      "lastDate": "2026-11-11"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1190.25,
-      "dayChg": 0.68,
-      "weekChg": -1.06,
+      "price": 1226.25,
+      "dayChg": 0.14,
+      "weekChg": 2.77,
       "high52w": 1328.0,
       "low52w": 1023.25,
-      "pctOf52wH": 89.6,
-      "lastDate": "2026-11-10"
+      "pctOf52wH": 92.3,
+      "lastDate": "2026-11-11"
     },
     "DBA": {
       "description": "Invesco DB Agriculture ETF \u2014 broad ag exposure",
-      "price": 26.0467,
-      "dayChg": -0.2,
-      "weekChg": -1.78,
+      "price": 26.335,
+      "dayChg": 0.29,
+      "weekChg": -0.43,
       "high52w": 29.49,
       "low52w": 24.7861,
-      "pctOf52wH": 88.3,
-      "lastDate": "2026-11-10"
+      "pctOf52wH": 89.3,
+      "lastDate": "2026-11-11"
     },
     "MOO": {
       "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
-      "price": 83.02,
-      "dayChg": -1.28,
-      "weekChg": 1.57,
+      "price": 83.595,
+      "dayChg": -0.19,
+      "weekChg": -0.14,
       "high52w": 88.85,
       "low52w": 67.6425,
-      "pctOf52wH": 93.4,
-      "lastDate": "2026-11-10"
+      "pctOf52wH": 94.1,
+      "lastDate": "2026-11-11"
     },
     "CORN": {
       "description": "Teucrium Corn Fund \u2014 feed grain competitor",
-      "price": 17.115,
-      "dayChg": -0.26,
-      "weekChg": -0.44,
+      "price": 17.265,
+      "dayChg": -0.49,
+      "weekChg": -0.78,
       "high52w": 20.29,
       "low52w": 16.47,
-      "pctOf52wH": 84.4,
-      "lastDate": "2026-11-10"
+      "pctOf52wH": 85.1,
+      "lastDate": "2026-11-11"
     }
   },
   "news_articles": [
+    {
+      "category": "hay_market",
+      "source": "Google News: Alfalfa Hay Market",
+      "title": "High Plains hay prices - High Plains Journal",
+      "url": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE9MNU5DQmpHTlA2OWJya1VxU2ZhdXBqMWd2UDRnNDlVWEt4cS0tQTF2d0szcTMxLXU1b3ExdHFaTVJKYVJkQkp2MThBWGpNUExybDlwV3F1X3lXQzJsZ2x2V3ZB?oc=5",
+      "summary": "High Plains hay prices &nbsp;&nbsp; High Plains Journal",
+      "published": "2026-11-10T20:55:52+00:00"
+    },
+    {
+      "category": "hay_market",
+      "source": "Google News: Alfalfa Hay Market",
+      "title": "USDA Hay Auction Report Nov. 10, 2026: Arthur, Pipestone, Shipshewana Prices - News and Statistics - IndexBox",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNVzdiVWRjRE9wdUhMUlpMZ0U4cWlRVW4wWDdfZDgzdG5pcjVDbmt0T3JkUUVyalFKX3FoSmRIQ001RUYyeGdaT2xQSkMta2lIa25TS0diaU5jcW9PRFp4ejZObzVaY29sYlJrZnBHYTFJSkliTXp0bTlxSlBFWkNldVAtXy1vc01DeUlMRWxibDRNMG1EY2NPa2ZmZ3dYZmhGVXlvTGVlTmhUOWs1Zl9yTE5uN2xzS2NtWkR3?oc=5",
+      "summary": "USDA Hay Auction Report Nov. 10, 2026: Arthur, Pipestone, Shipshewana Prices - News and Statistics &nbsp;&nbsp; IndexBox",
+      "published": "2026-11-10T19:30:27+00:00"
+    },
     {
       "category": "hay_market",
       "source": "Google News: Alfalfa Hay Market",
