@@ -1,0 +1,32 @@
+{
+  "generatedAt": "2026-11-13T15:32:10.891176+00:00",
+  "date": "2026-11-13",
+  "signalCount": 0,
+  "errors": [
+    "Alfalfa/Imperial_Valley_CA",
+    "Alfalfa/Yuma_AZ",
+    "Alfalfa/Columbia_Basin_WA",
+    "Alfalfa/Snake_River_Plain_ID",
+    "Alfalfa/San_Joaquin_Valley_CA",
+    "Alfalfa/Central_Kansas",
+    "Alfalfa/Nebraska_Panhandle",
+    "Alfalfa/Eastern_Colorado",
+    "Alfalfa/Central_Utah",
+    "Alfalfa/Southern_Alberta_CA",
+    "Alfalfa/Saskatchewan_Irrigated_CA",
+    "Timothy/Columbia_Basin_WA",
+    "Timothy/Central_Oregon",
+    "Timothy/Northern_Idaho",
+    "Timothy/Ontario_CA",
+    "Timothy/Quebec_CA",
+    "Orchardgrass/Willamette_Valley_OR",
+    "Orchardgrass/Virginia_Shenandoah",
+    "Mixed_Grass/Iowa",
+    "Mixed_Grass/Missouri",
+    "Mixed_Grass/South_Dakota",
+    "Bermudagrass/Texas_South",
+    "Bermudagrass/Oklahoma",
+    "Bermudagrass/Georgia"
+  ],
+  "signals": []
+}
