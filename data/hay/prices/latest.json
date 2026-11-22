@@ -1,6 +1,6 @@
 {
-  "fetchedAt": "2026-11-21T15:41:19.687494+00:00",
-  "date": "2026-11-21",
+  "fetchedAt": "2026-11-22T15:28:04.427729+00:00",
+  "date": "2026-11-22",
   "usda_benchmarks": {
     "Alfalfa": {
       "Supreme": {
@@ -348,12 +348,12 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 223.0,
-      "dayChg": 0.07,
-      "weekChg": 1.07,
+      "price": 227.7,
+      "dayChg": 2.18,
+      "weekChg": 3.2,
       "high52w": 258.475,
       "low52w": 207.0,
-      "pctOf52wH": 86.3,
+      "pctOf52wH": 88.1,
       "lastDate": "2026-11-20"
     },
     "GF=F": {
@@ -368,12 +368,12 @@
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 434.5,
-      "dayChg": -1.03,
-      "weekChg": -2.47,
+      "price": 448.75,
+      "dayChg": 2.22,
+      "weekChg": 0.73,
       "high52w": 543.0,
       "low52w": 402.0,
-      "pctOf52wH": 80.0,
+      "pctOf52wH": 82.6,
       "lastDate": "2026-11-20"
     },
     "ZS=F": {
@@ -421,34 +421,18 @@
     {
       "category": "hay_market",
       "source": "Google News: Alfalfa Hay Market",
-      "title": "Hay Prices by region - High Plains Journal",
-      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE4xcy0xeHFGbWh2R1dJUk5xSU1XdnFHbE8wekwzTnpydVFxXzZuNFhUcHJYWjdYVUxnaHpBV3NhbXNXSndsWjN4X19LNE9ldkdKZTY4aktnQ1pNbDVaWDRB?oc=5",
-      "summary": "Hay Prices by region &nbsp;&nbsp; High Plains Journal",
-      "published": "2026-11-19T15:11:42+00:00"
-    },
-    {
-      "category": "hay_market",
-      "source": "Google News: Alfalfa Hay Market",
       "title": "USDA Hay Markets \u2013 November 17, 2026 - Hay and Forage Grower Magazine",
       "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNNXh2LWZaRzVZWkZqV2JVU2U0VGw3ajlzXzNqSHdTWkZRZ1JoWXo2X1oxazhRM1pMYUVOLW96NHZpTTMtcGtBYnJuZzhEOW9XWDRkZDRacjRkVlpZRW5hbXJpWVlrVUtJOGxISjY5NjVmX2dmM1NuNksxQkN3S2IyOHpMdl9NeGpJUnc?oc=5",
       "summary": "USDA Hay Markets \u2013 November 17, 2026 &nbsp;&nbsp; Hay and Forage Grower Magazine",
       "published": "2026-11-17T08:00:00+00:00"
     },
     {
-      "category": "hay_market",
-      "source": "Google News: Alfalfa Hay Market",
-      "title": "USDA Hay Auction Report: Mixed Prices in Arthur, Pipestone and Shipshewana - News and Statistics - IndexBox",
-      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOanc1TVFkUUR3dTRHVy1HWmdhSC1WcFB2TVNkbkpKOERucldnc256OXBBM1p6eVJ6NlFHWUtpbHJ4NVdMeGk2UkxGRkZqd3B6eU9FUmpaQlBaZm5PdHNxTmZhV0ljRVhFak5YTVU4aG92eE93T0hPS2F4aGRQdDNfMVh5dFFGeWZGejJLVHdUSE5FVzMybXVNQ3Nya0JYNU95OXhBYnJwbzI?oc=5",
-      "summary": "USDA Hay Auction Report: Mixed Prices in Arthur, Pipestone and Shipshewana - News and Statistics &nbsp;&nbsp; IndexBox",
-      "published": "2026-11-16T20:50:50+00:00"
-    },
-    {
       "category": "hay_drought",
       "source": "Google News: Hay Drought Supply",
       "title": "Kenya\u2019s milk shortage deepens as drought hits farmers and pushes up prices - Al Jazeera",
-      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQRW9oc3dzTENaUWVMY0Q4ZmpDWGJ3WlRDcVQ0YkdBN2pMSTNoZ1lMMUd1NnNQR2FUYVJ4alVtYWZ4YlU3em1sSlBWdDQ2LXZlNlI0R05aYTJ6cWlfcllCRXpBaDNOanZiajlJcUNsejJPeF80TjBMbExOMzFuQnhjSzZrN3Y0OXhmaUJZekxBTGVaWENnNWxMaTZMTUVndUtDNlI0NG5DU3oyclBkRlV1ME9JUUtrNWdFcHRJ0gG7AUFVX3lxTFBFb2hzd3NMQ1pRZUxjRDhmakNYYndaVENxVDRiR0E3akxJM2hnWUwxR3U2c1BHYVRhUnhqVW1hZnhiVTd6bWxKUFZ0NDYtdmU2UjRHTlphMnpxaV9yWUJFekFoM05qdmJqOUlxQ2x6Mk94XzROMExsTE4zMW5CeGNLNms3djQ5eGZpQll6TEFMZVpYQ2c1bExpNkxNRWd1S0M2UjQ0bkNTejJyUGRGVXUwT0lRS2s1Z0VwdEk?oc=5",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNZTR5dnp2ZnQxSGVNc3B2cGRxUXdTamZfOEhMMUFGWUNNblo0cE1iZzFsbkhfZlF4RU9PM09pMFN5SGFIS293R0pBZFdnOEtCTDVzVnB5eDNkaGpXNURMZTF2NkFKdlBSNkJmZnZlNnZUOFRaOVF0Ylp1ZWxTTy1IN3NIRXNxcGJUVzF5Q1BYVjJXT1llQkhDMmhpLU1wOGtkak9TZS1UdkctRlctR1pGUVAtdVFWUdIBuwFBVV95cUxQRW9oc3dzTENaUWVMY0Q4ZmpDWGJ3WlRDcVQ0YkdBN2pMSTNoZ1lMMUd1NnNQR2FUYVJ4alVtYWZ4YlU3em1sSlBWdDQ2LXZlNlI0R05aYTJ6cWlfcllCRXpBaDNOanZiajlJcUNsejJPeF80TjBMbExOMzFuQnhjSzZrN3Y0OXhmaUJZekxBTGVaWENnNWxMaTZMTUVndUtDNlI0NG5DU3oyclBkRlV1ME9JUUtrNWdFcHRJ?oc=5",
       "summary": "Kenya\u2019s milk shortage deepens as drought hits farmers and pushes up prices &nbsp;&nbsp; Al Jazeera",
-      "published": "2026-11-19T00:44:24+00:00"
+      "published": "2026-11-19T00:42:22+00:00"
     }
   ],
   "sources": {
