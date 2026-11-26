@@ -1,0 +1,483 @@
+{
+  "fetchedAt": "2026-11-26T17:53:46.843172+00:00",
+  "date": "2026-11-26",
+  "usda_benchmarks": {
+    "Alfalfa": {
+      "Supreme": {
+        "price": 277,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      },
+      "Premium": {
+        "price": 240,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      },
+      "Good": {
+        "price": 195,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      },
+      "Fair": {
+        "price": 155,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      }
+    },
+    "Timothy": {
+      "Premium": {
+        "price": 320,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      },
+      "Good": {
+        "price": 265,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      }
+    },
+    "Orchardgrass": {
+      "Premium": {
+        "price": 290,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      },
+      "Good": {
+        "price": 240,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      }
+    },
+    "Mixed_Grass": {
+      "Good": {
+        "price": 175,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      },
+      "Fair": {
+        "price": 135,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      }
+    },
+    "Bermudagrass": {
+      "Good": {
+        "price": 155,
+        "unit": "$/ton",
+        "basis": "FOB",
+        "source": "USDA AMS",
+        "source_url": "https://www.ams.usda.gov/market-news/hay"
+      }
+    }
+  },
+  "regional_prices": {
+    "Imperial_Valley_CA": {
+      "hay_type": "Alfalfa",
+      "grade": "Supreme",
+      "base_price": 277,
+      "premium": 25,
+      "final_price": 302,
+      "unit": "$/ton",
+      "state": "CA",
+      "country": "US",
+      "primary_use": "Dairy/Export"
+    },
+    "Yuma_AZ": {
+      "hay_type": "Alfalfa",
+      "grade": "Supreme",
+      "base_price": 277,
+      "premium": 0,
+      "final_price": 277,
+      "unit": "$/ton",
+      "state": "AZ",
+      "country": "US",
+      "primary_use": "Dairy/Export"
+    },
+    "Columbia_Basin_WA": {
+      "hay_type": "Timothy",
+      "grade": "Premium",
+      "base_price": 320,
+      "premium": 30,
+      "final_price": 350,
+      "unit": "$/ton",
+      "state": "WA",
+      "country": "US",
+      "primary_use": "Export/Equine"
+    },
+    "Snake_River_Plain_ID": {
+      "hay_type": "Alfalfa",
+      "grade": "Premium",
+      "base_price": 240,
+      "premium": 20,
+      "final_price": 260,
+      "unit": "$/ton",
+      "state": "ID",
+      "country": "US",
+      "primary_use": "Dairy/Export"
+    },
+    "San_Joaquin_Valley_CA": {
+      "hay_type": "Alfalfa",
+      "grade": "Good",
+      "base_price": 195,
+      "premium": 15,
+      "final_price": 210,
+      "unit": "$/ton",
+      "state": "CA",
+      "country": "US",
+      "primary_use": "Dairy"
+    },
+    "Central_Kansas": {
+      "hay_type": "Alfalfa",
+      "grade": "Good",
+      "base_price": 195,
+      "premium": -5,
+      "final_price": 190,
+      "unit": "$/ton",
+      "state": "KS",
+      "country": "US",
+      "primary_use": "Beef/Dairy"
+    },
+    "Nebraska_Panhandle": {
+      "hay_type": "Alfalfa",
+      "grade": "Good",
+      "base_price": 195,
+      "premium": -5,
+      "final_price": 190,
+      "unit": "$/ton",
+      "state": "NE",
+      "country": "US",
+      "primary_use": "Beef/Dairy"
+    },
+    "Eastern_Colorado": {
+      "hay_type": "Alfalfa",
+      "grade": "Good",
+      "base_price": 195,
+      "premium": 0,
+      "final_price": 195,
+      "unit": "$/ton",
+      "state": "CO",
+      "country": "US",
+      "primary_use": "Beef/Dairy"
+    },
+    "Central_Utah": {
+      "hay_type": "Alfalfa",
+      "grade": "Premium",
+      "base_price": 240,
+      "premium": 0,
+      "final_price": 240,
+      "unit": "$/ton",
+      "state": "UT",
+      "country": "US",
+      "primary_use": "Dairy/Export"
+    },
+    "Southern_Alberta_CA": {
+      "hay_type": "Alfalfa",
+      "grade": "Good",
+      "base_price": 195,
+      "premium": -10,
+      "final_price": 185,
+      "unit": "$/ton",
+      "state": "AB",
+      "country": "CA",
+      "primary_use": "Beef/Export"
+    },
+    "Saskatchewan_Irrigated_CA": {
+      "hay_type": "Alfalfa",
+      "grade": "Good",
+      "base_price": 195,
+      "premium": 0,
+      "final_price": 195,
+      "unit": "$/ton",
+      "state": "SK",
+      "country": "CA",
+      "primary_use": "Beef"
+    },
+    "Central_Oregon": {
+      "hay_type": "Timothy",
+      "grade": "Premium",
+      "base_price": 320,
+      "premium": 0,
+      "final_price": 320,
+      "unit": "$/ton",
+      "state": "OR",
+      "country": "US",
+      "primary_use": "Export/Equine"
+    },
+    "Northern_Idaho": {
+      "hay_type": "Timothy",
+      "grade": "Premium",
+      "base_price": 320,
+      "premium": 0,
+      "final_price": 320,
+      "unit": "$/ton",
+      "state": "ID",
+      "country": "US",
+      "primary_use": "Export/Equine"
+    },
+    "Ontario_CA": {
+      "hay_type": "Timothy",
+      "grade": "Good",
+      "base_price": 265,
+      "premium": -15,
+      "final_price": 250,
+      "unit": "$/ton",
+      "state": "ON",
+      "country": "CA",
+      "primary_use": "Export/Dairy"
+    },
+    "Quebec_CA": {
+      "hay_type": "Timothy",
+      "grade": "Good",
+      "base_price": 265,
+      "premium": 0,
+      "final_price": 265,
+      "unit": "$/ton",
+      "state": "QC",
+      "country": "CA",
+      "primary_use": "Dairy"
+    },
+    "Willamette_Valley_OR": {
+      "hay_type": "Orchardgrass",
+      "grade": "Premium",
+      "base_price": 290,
+      "premium": 0,
+      "final_price": 290,
+      "unit": "$/ton",
+      "state": "OR",
+      "country": "US",
+      "primary_use": "Equine/Export"
+    },
+    "Virginia_Shenandoah": {
+      "hay_type": "Orchardgrass",
+      "grade": "Good",
+      "base_price": 240,
+      "premium": 0,
+      "final_price": 240,
+      "unit": "$/ton",
+      "state": "VA",
+      "country": "US",
+      "primary_use": "Equine/Beef"
+    },
+    "Iowa": {
+      "hay_type": "Mixed_Grass",
+      "grade": "Good",
+      "base_price": 175,
+      "premium": 0,
+      "final_price": 175,
+      "unit": "$/ton",
+      "state": "IA",
+      "country": "US",
+      "primary_use": "Beef/Dairy"
+    },
+    "Missouri": {
+      "hay_type": "Mixed_Grass",
+      "grade": "Good",
+      "base_price": 175,
+      "premium": 0,
+      "final_price": 175,
+      "unit": "$/ton",
+      "state": "MO",
+      "country": "US",
+      "primary_use": "Beef"
+    },
+    "South_Dakota": {
+      "hay_type": "Mixed_Grass",
+      "grade": "Good",
+      "base_price": 175,
+      "premium": 0,
+      "final_price": 175,
+      "unit": "$/ton",
+      "state": "SD",
+      "country": "US",
+      "primary_use": "Beef"
+    },
+    "Texas_South": {
+      "hay_type": "Bermudagrass",
+      "grade": "Good",
+      "base_price": 155,
+      "premium": -20,
+      "final_price": 135,
+      "unit": "$/ton",
+      "state": "TX",
+      "country": "US",
+      "primary_use": "Beef"
+    },
+    "Oklahoma": {
+      "hay_type": "Bermudagrass",
+      "grade": "Good",
+      "base_price": 155,
+      "premium": 0,
+      "final_price": 155,
+      "unit": "$/ton",
+      "state": "OK",
+      "country": "US",
+      "primary_use": "Beef"
+    },
+    "Georgia": {
+      "hay_type": "Bermudagrass",
+      "grade": "Good",
+      "base_price": 155,
+      "premium": 0,
+      "final_price": 155,
+      "unit": "$/ton",
+      "state": "GA",
+      "country": "US",
+      "primary_use": "Beef/Equine"
+    }
+  },
+  "proxy_tickers": {
+    "LE=F": {
+      "description": "Live Cattle (CME) \u2014 primary hay demand driver",
+      "price": 223.325,
+      "dayChg": -1.14,
+      "weekChg": 1.62,
+      "high52w": 258.475,
+      "low52w": 210.175,
+      "pctOf52wH": 86.4,
+      "lastDate": "2026-11-25"
+    },
+    "GF=F": {
+      "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
+      "price": 327.525,
+      "dayChg": -1.61,
+      "weekChg": -2.81,
+      "high52w": 375.875,
+      "low52w": 315.125,
+      "pctOf52wH": 87.1,
+      "lastDate": "2026-11-25"
+    },
+    "ZC=F": {
+      "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
+      "price": 439.75,
+      "dayChg": 1.32,
+      "weekChg": 0.98,
+      "high52w": 543.0,
+      "low52w": 402.0,
+      "pctOf52wH": 81.0,
+      "lastDate": "2026-11-25"
+    },
+    "ZS=F": {
+      "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
+      "price": 1244.0,
+      "dayChg": 0.81,
+      "weekChg": 2.24,
+      "high52w": 1328.0,
+      "low52w": 1023.25,
+      "pctOf52wH": 93.7,
+      "lastDate": "2026-11-25"
+    },
+    "DBA": {
+      "description": "Invesco DB Agriculture ETF \u2014 broad ag exposure",
+      "price": 26.34,
+      "dayChg": 0.23,
+      "weekChg": 1.23,
+      "high52w": 29.49,
+      "low52w": 25.2204,
+      "pctOf52wH": 89.3,
+      "lastDate": "2026-11-25"
+    },
+    "MOO": {
+      "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
+      "price": 79.83,
+      "dayChg": 1.59,
+      "weekChg": -1.46,
+      "high52w": 88.85,
+      "low52w": 70.6675,
+      "pctOf52wH": 89.8,
+      "lastDate": "2026-11-25"
+    },
+    "CORN": {
+      "description": "Teucrium Corn Fund \u2014 feed grain competitor",
+      "price": 17.22,
+      "dayChg": 1.29,
+      "weekChg": 2.01,
+      "high52w": 20.29,
+      "low52w": 16.47,
+      "pctOf52wH": 84.9,
+      "lastDate": "2026-11-25"
+    }
+  },
+  "news_articles": [
+    {
+      "category": "hay_market",
+      "source": "Google News: Alfalfa Hay Market",
+      "title": "USDA Hay Markets \u2013 November 24, 2026 - Hay and Forage Grower Magazine",
+      "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxOTDFtQndISVFZYy0yR3N4d2U5cnV1OVNYNmRBM0lqYlFoYkRFcGtrS3hEVkttN2RZcWE0VTMtT1RXVXZpVjdtM29qWmtYV1NTUW5NMnJJWEFNcHFuUS1NWkdkU2xibndnVWxOQm02QTAtanB6eGZpdVhzMGtQRHZIOGZnTDQ2d2kwaXc?oc=5",
+      "summary": "USDA Hay Markets \u2013 November 24, 2026 &nbsp;&nbsp; Hay and Forage Grower Magazine",
+      "published": "2026-11-24T15:34:32+00:00"
+    },
+    {
+      "category": "hay_market",
+      "source": "Google News: Alfalfa Hay Market",
+      "title": "Weekly Hay Prices - High Plains Journal",
+      "url": "https://news.google.com/rss/articles/CBMiWEFVX3lxTE1fYy1pQThjMnF2dzVySzIxZWVqbHFPNkREbDlFX0xNMy1EblduSjYxNVNDX3E2emlBWHl5MF8ybmY1Ulk3WkJ5Q2hEai1zT3lKZTFhcEFFY0w?oc=5",
+      "summary": "Weekly Hay Prices &nbsp;&nbsp; High Plains Journal",
+      "published": "2026-11-24T16:10:59+00:00"
+    },
+    {
+      "category": "hay_market",
+      "source": "Google News: Alfalfa Hay Market",
+      "title": "Midwest Hay Auction Prices Mixed: Illinois Softer, Indiana Firmer - News and Statistics - IndexBox",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQQ2trenVrc1lkTFJxNzVtLU11clZsdUpiOVdmR1dpX3laN1BOY3VvaXhiUTMxak5MS3lEMUdTQXplYjlEZjJJNXZseDROZ0ZDN214ZU1zM2J2VTFKbHh1a3dfS2RIQWZuTkJoSmljcm1pTU9SMHdTajltVEdOWVBSWDZFY1BDTGFwR0Y1NUZIQzJfSnZvaU40M0F4QlBGNjNHT05Sd2xrU1ZQMnNPY3EybGZTN3AzMURXdzgwWTV3?oc=5",
+      "summary": "Midwest Hay Auction Prices Mixed: Illinois Softer, Indiana Firmer - News and Statistics &nbsp;&nbsp; IndexBox",
+      "published": "2026-11-26T04:10:41+00:00"
+    },
+    {
+      "category": "hay_market",
+      "source": "Google News: Alfalfa Hay Market",
+      "title": "USDA Hay Auction Prices: Arthur, IL and Pipestone, MN Weekly Forage Report - News and Statistics - IndexBox",
+      "url": "https://news.google.com/rss/articles/CBMi4wFBVV95cUxNdW05N0M4ZWZDbF9SUFYyTE51WkdTM1dNMmJLdGVsMzVhYXV6OFdOX0RBZlVYeGt3WGs2X3ltWTA4V0FHYXlqOW9yY3BfbzVid080aFNmR2NJZ2dBemVIVjFVcnBzX2NsLXRDdlRXdG5FYllia2h5WG1DNFNWNjhsSVR4ZzJOOHVyTGFQNmwxVFB6VmFSUmFhUmt6ek9NWHpNcWlEMTZSV2lxblFSVTJRa0FLNVRETExWaERpNThOdjJCdzVKRy1KNXVkZDUxaFAyTlNBVGJqSHN6YkFnM1RNalQ4NA?oc=5",
+      "summary": "USDA Hay Auction Prices: Arthur, IL and Pipestone, MN Weekly Forage Report - News and Statistics &nbsp;&nbsp; IndexBox",
+      "published": "2026-11-24T23:10:35+00:00"
+    },
+    {
+      "category": "hay_market",
+      "source": "Google News: Alfalfa Hay Market",
+      "title": "USDA Hay Auction Prices: Arthur, IL and Pipestone, MN Reports - News and Statistics - IndexBox",
+      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOUDFCSEJZMlZVTXBKdi0wd2hfeU43NzAxV1JpeHNhYTA0cFg0Sm9meVdrc3l2WThBV3ZmaWtTWG81NGZteWpJNEMtSHdzZG1SS0ZDSWttODdpUUo4OHA3V0Jtc1JTeW0xX2pyak5WM21RU1BSZHBaZTRKVGFpaDd2Ym1jR01hOXl5MWZsekpOU2k4NWUxb1NNNmMwQ0ZteFNNWGFnQXYwVQ?oc=5",
+      "summary": "USDA Hay Auction Prices: Arthur, IL and Pipestone, MN Reports - News and Statistics &nbsp;&nbsp; IndexBox",
+      "published": "2026-11-23T20:40:31+00:00"
+    },
+    {
+      "category": "hay_drought",
+      "source": "Google News: Hay Drought Supply",
+      "title": "Kenya\u2019s milk shortage deepens as drought hits farmers and pushes up prices - Al Jazeera",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNZTR5dnp2ZnQxSGVNc3B2cGRxUXdTamZfOEhMMUFGWUNNblo0cE1iZzFsbkhfZlF4RU9PM09pMFN5SGFIS293R0pBZFdnOEtCTDVzVnB5eDNkaGpXNURMZTF2NkFKdlBSNkJmZnZlNnZUOFRaOVF0Ylp1ZWxTTy1IN3NIRXNxcGJUVzF5Q1BYVjJXT1llQkhDMmhpLU1wOGtkak9TZS1UdkctRlctR1pGUVAtdVFWUdIBuwFBVV95cUxQRW9oc3dzTENaUWVMY0Q4ZmpDWGJ3WlRDcVQ0YkdBN2pMSTNoZ1lMMUd1NnNQR2FUYVJ4alVtYWZ4YlU3em1sSlBWdDQ2LXZlNlI0R05aYTJ6cWlfcllCRXpBaDNOanZiajlJcUNsejJPeF80TjBMbExOMzFuQnhjSzZrN3Y0OXhmaUJZekxBTGVaWENnNWxMaTZMTUVndUtDNlI0NG5DU3oyclBkRlV1ME9JUUtrNWdFcHRJ?oc=5",
+      "summary": "Kenya\u2019s milk shortage deepens as drought hits farmers and pushes up prices &nbsp;&nbsp; Al Jazeera",
+      "published": "2026-11-19T00:42:22+00:00"
+    }
+  ],
+  "sources": {
+    "usda_ams": "https://www.ams.usda.gov/market-news/hay",
+    "usda_reports": {
+      "National": "https://www.ams.usda.gov/mnreports/lp_fv050.txt",
+      "Columbia_Basin_WA": "https://www.ams.usda.gov/mnreports/ams_3058.pdf",
+      "California": "https://www.ams.usda.gov/mnreports/LA_FV900.txt",
+      "Southwest": "https://www.ams.usda.gov/mnreports/lp_fy770.txt",
+      "Midwest": "https://www.ams.usda.gov/mnreports/lp_fy720.txt",
+      "Southeast": "https://www.ams.usda.gov/mnreports/lp_fy640.txt",
+      "Northern_Plains": "https://www.ams.usda.gov/mnreports/lp_fy700.txt"
+    },
+    "proxy_note": "No direct hay futures exist. Cattle/feed proxies used."
+  }
+}
