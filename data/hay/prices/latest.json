@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-11-27T17:34:00.813526+00:00",
+  "fetchedAt": "2026-11-27T18:26:46.989564+00:00",
   "date": "2026-11-27",
   "usda_benchmarks": {
     "Alfalfa": {
@@ -348,69 +348,69 @@
   "proxy_tickers": {
     "LE=F": {
       "description": "Live Cattle (CME) \u2014 primary hay demand driver",
-      "price": 228.75,
-      "dayChg": 2.43,
-      "weekChg": 2.65,
+      "price": 228.125,
+      "dayChg": 2.15,
+      "weekChg": 2.37,
       "high52w": 258.475,
       "low52w": 210.175,
-      "pctOf52wH": 88.5,
+      "pctOf52wH": 88.3,
       "lastDate": "2026-11-27"
     },
     "GF=F": {
       "description": "Feeder Cattle (CME) \u2014 hay demand indicator",
-      "price": 331.6,
-      "dayChg": 1.24,
-      "weekChg": -1.91,
+      "price": 331.2,
+      "dayChg": 1.12,
+      "weekChg": -2.03,
       "high52w": 375.875,
       "low52w": 318.975,
-      "pctOf52wH": 88.2,
+      "pctOf52wH": 88.1,
       "lastDate": "2026-11-27"
     },
     "ZC=F": {
       "description": "Corn (CBOT) \u2014 competing feed, hay demand substitute",
-      "price": 464.0,
-      "dayChg": 5.51,
-      "weekChg": 5.69,
+      "price": 462.5,
+      "dayChg": 5.17,
+      "weekChg": 5.35,
       "high52w": 543.0,
       "low52w": 402.0,
-      "pctOf52wH": 85.5,
+      "pctOf52wH": 85.2,
       "lastDate": "2026-11-27"
     },
     "ZS=F": {
       "description": "Soybeans (CBOT) \u2014 protein feed competitor to alfalfa",
-      "price": 1270.75,
-      "dayChg": 2.15,
-      "weekChg": 5.24,
+      "price": 1264.0,
+      "dayChg": 1.61,
+      "weekChg": 4.68,
       "high52w": 1328.0,
       "low52w": 1023.25,
-      "pctOf52wH": 95.7,
+      "pctOf52wH": 95.2,
       "lastDate": "2026-11-27"
     },
     "DBA": {
       "description": "Invesco DB Agriculture ETF \u2014 broad ag exposure",
-      "price": 26.76,
-      "dayChg": 1.59,
-      "weekChg": 2.1,
+      "price": 26.7301,
+      "dayChg": 1.48,
+      "weekChg": 1.98,
       "high52w": 29.49,
       "low52w": 25.2397,
-      "pctOf52wH": 90.7,
+      "pctOf52wH": 90.6,
       "lastDate": "2026-11-27"
     },
     "MOO": {
       "description": "VanEck Agribusiness ETF \u2014 ag sector proxy",
-      "price": 80.985,
-      "dayChg": 1.45,
-      "weekChg": 1.79,
+      "price": 81.0,
+      "dayChg": 1.47,
+      "weekChg": 1.81,
       "high52w": 88.85,
       "low52w": 70.6675,
-      "pctOf52wH": 91.1,
+      "pctOf52wH": 91.2,
       "lastDate": "2026-11-27"
     },
     "CORN": {
       "description": "Teucrium Corn Fund \u2014 feed grain competitor",
-      "price": 17.4865,
-      "dayChg": 1.55,
-      "weekChg": 2.44,
+      "price": 17.48,
+      "dayChg": 1.51,
+      "weekChg": 2.4,
       "high52w": 20.29,
       "low52w": 16.47,
       "pctOf52wH": 86.2,
@@ -457,6 +457,14 @@
       "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQQ2trenVrc1lkTFJxNzVtLU11clZsdUpiOVdmR1dpX3laN1BOY3VvaXhiUTMxak5MS3lEMUdTQXplYjlEZjJJNXZseDROZ0ZDN214ZU1zM2J2VTFKbHh1a3dfS2RIQWZuTkJoSmljcm1pTU9SMHdTajltVEdOWVBSWDZFY1BDTGFwR0Y1NUZIQzJfSnZvaU40M0F4QlBGNjNHT05Sd2xrU1ZQMnNPY3EybGZTN3AzMURXdzgwWTV3?oc=5",
       "summary": "Midwest Hay Auction Prices Mixed: Illinois Softer, Indiana Firmer - News and Statistics &nbsp;&nbsp; IndexBox",
       "published": "2026-11-26T04:10:41+00:00"
+    },
+    {
+      "category": "hay_export",
+      "source": "Google News: Hay Export",
+      "title": "Dried Alfalfa Leaves Suppliers, Export Data & Price Trends | Global Market Overview 2026 - Tridge",
+      "url": "https://news.google.com/rss/articles/CBMia0FVX3lxTE40VVZ4N1VsdU5nR2xoNkVsZHlFN2FUbUdRa09mNGtMbHJZZzl4SExnakZOWjdiTHRDeGh5OFhwZF81aFlEbjlqWk5JZ21zYU9McHVxSVgxVXo1VVBOSVFPVExFWjZHOC1kS3Aw?oc=5",
+      "summary": "Dried Alfalfa Leaves Suppliers, Export Data & Price Trends | Global Market Overview 2026 &nbsp;&nbsp; Tridge",
+      "published": "2026-11-20T08:00:00+00:00"
     }
   ],
   "sources": {
